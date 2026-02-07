@@ -1,0 +1,149 @@
+/* =========================
+   VIKAS — Base Design System
+   Futuristic Tech Luxury
+========================= */
+
+:root {
+    --bg-primary: #0B0D10;
+    --bg-surface: #12151B;
+    --accent-primary: #4F8CFF;
+    --accent-secondary: #8B5CF6;
+    --text-primary: #EDEFF3;
+    --text-muted: #9AA3B2;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Links */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================
+   Navigation
+========================= */
+.site-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(11, 13, 16, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+}
+
+/* CTA */
+.cta-btn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #fff;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(79, 140, 255, 0.35);
+}
+
+/* =========================
+   Main Content
+========================= */
+main {
+    padding-top: 90px;
+}
+
+/* Hero */
+.hero {
+    min-height: 90vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero h1 {
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+}
+
+.hero p {
+    max-width: 520px;
+    color: var(--text-muted);
+    margin-bottom: 2.2rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.secondary-link {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.secondary-link:hover {
+    color: var(--text-primary);
+}
+
+/* =========================
+   Footer
+========================= */
+.site-footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
