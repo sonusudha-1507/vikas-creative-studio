@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}VIKAS — Creative Editing Studio{% endblock %}</title>
+
+    <!-- Base CSS (we’ll add files later) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header class="site-header">
+        <nav class="nav">
+            <div class="logo">VIKAS</div>
+
+            <ul class="nav-links">
+                <li><a href="/">Work</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+
+            <a href="#" class="cta-btn">Start a Project</a>
+        </nav>
+    </header>
+
+    <!-- Page Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>© {{ year }} VIKAS Creative Editing Studio</p>
+    </footer>
+
+    <!-- Global JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
