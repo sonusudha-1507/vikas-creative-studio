@@ -209,3 +209,57 @@ main {
 .portfolio-cta {
     margin-top: 3rem;
 }
+/* =========================
+   Services & Pricing
+========================= */
+.services {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: var(--bg-surface);
+    border-radius: 18px;
+    padding: 2.5rem 2rem;
+    border: 1px solid var(--border-subtle);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.service-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.price {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.service-card ul {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.service-card li {
+    margin-bottom: 0.6rem;
+    color: var(--text-muted);
+}
+
+/* Highlight Premium */
+.service-card.featured {
+    border: 1px solid rgba(79, 140, 255, 0.6);
+    box-shadow: 0 0 0 1px rgba(79, 140, 255, 0.2);
+}
