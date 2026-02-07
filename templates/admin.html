@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — VIKAS{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard">
+    <h2>Project Submissions</h2>
+
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>File</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td>{{ project.id }}</td>
+                    <td>{{ project.name }}</td>
+                    <td>{{ project.email }}</td>
+                    <td>{{ project.project_type }}</td>
+                    <td>
+                        {% if project.filename %}
+                            {{ project.filename }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ project.status }}</td>
+                    <td>{{ project.created_at[:10] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

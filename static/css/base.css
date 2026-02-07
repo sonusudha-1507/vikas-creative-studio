@@ -351,3 +351,89 @@ main {
     gap: 1.5rem;
     flex-wrap: wrap;
 }
+/* =========================
+   Start Project Form
+========================= */
+.project-form {
+    padding: 6rem 2rem;
+}
+
+.form-box {
+    max-width: 620px;
+    margin: 0 auto;
+    background: var(--bg-surface);
+    padding: 3rem 2.5rem;
+    border-radius: 18px;
+    border: 1px solid var(--border-subtle);
+}
+
+.form-box h2 {
+    margin-bottom: 0.8rem;
+}
+
+.form-box p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 10px;
+    background: #0f1116;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+}
+/* =========================
+   Admin Dashboard
+========================= */
+.admin-dashboard {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-dashboard h2 {
+    margin-bottom: 2rem;
+}
+
+.admin-table {
+    overflow-x: auto;
+}
+
+.admin-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-surface);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.admin-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}

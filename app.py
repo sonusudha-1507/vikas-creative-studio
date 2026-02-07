@@ -2,21 +2,59 @@ from flask import Flask, render_template, request
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
+import sqlite3
 
 app = Flask(__name__)
 
-# Upload configuration
+# ------------------------
+# File upload config
+# ------------------------
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "mp4", "mov", "zip", "pdf"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024  # 200MB limit
+app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024  # 200MB
+
 
 def allowed_file(filename):
     return "." in filename and \
            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# ------------------------
+# Database helpers
+# ------------------------
+DB_PATH = "database/projects.db"
+
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS projects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            project_type TEXT NOT NULL,
+            description TEXT NOT NULL,
+            filename TEXT,
+            status TEXT DEFAULT 'Submitted',
+            created_at TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+# ------------------------
+# Routes
+# ------------------------
 @app.route("/")
 def home():
     return render_template("home.html", year=datetime.now().year)
@@ -31,16 +69,32 @@ def start_project():
         description = request.form.get("description")
 
         uploaded_file = request.files.get("project_file")
+        filename = None
 
         if uploaded_file and allowed_file(uploaded_file.filename):
             filename = secure_filename(uploaded_file.filename)
-            file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            uploaded_file.save(file_path)
-        else:
-            filename = None
+            uploaded_file.save(
+                os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            )
 
-        print("New Project Request:")
-        print(name, email, project_type, description, filename)
+        conn = get_db_connection()
+        conn.execute(
+            """
+            INSERT INTO projects
+            (name, email, project_type, description, filename, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                name,
+                email,
+                project_type,
+                description,
+                filename,
+                datetime.now().isoformat()
+            )
+        )
+        conn.commit()
+        conn.close()
 
         return render_template(
             "start_project.html",
@@ -49,8 +103,25 @@ def start_project():
         )
 
     return render_template("start_project.html", year=datetime.now().year)
+@app.route("/admin")
+def admin():
+    conn = get_db_connection()
+    projects = conn.execute(
+        "SELECT * FROM projects ORDER BY created_at DESC"
+    ).fetchall()
+    conn.close()
+
+    return render_template(
+        "admin.html",
+        projects=projects,
+        year=datetime.now().year
+    )
 
 
+# ------------------------
+# App start
+# ------------------------
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True)
 
