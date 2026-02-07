@@ -147,3 +147,65 @@ main {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+/* =========================
+   Portfolio Preview
+========================= */
+.portfolio-preview {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: var(--text-muted);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+.portfolio-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--bg-surface);
+    cursor: pointer;
+}
+
+.portfolio-thumb {
+    height: 280px;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.2rem;
+    background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.1),
+        rgba(0,0,0,0.85)
+    );
+    transition: transform 0.6s ease;
+}
+
+.portfolio-item:hover .portfolio-thumb {
+    transform: scale(1.06);
+}
+
+.portfolio-label {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    opacity: 0.85;
+}
+
+.portfolio-cta {
+    margin-top: 3rem;
+}
