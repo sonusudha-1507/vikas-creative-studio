@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login — VIKAS{% endblock %}
+
+{% block content %}
+<section class="project-form">
+    <div class="form-box">
+        <h2>Admin Login</h2>
+
+        {% if error %}
+        <p style="color:#ff6b6b;">Invalid credentials</p>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit" class="cta-btn">Login</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

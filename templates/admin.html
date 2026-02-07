@@ -33,7 +33,17 @@
                             —
                         {% endif %}
                     </td>
-                    <td>{{ project.status }}</td>
+                    <td>
+    <form method="POST" action="/update-status/{{ project.id }}">
+        <select name="status" onchange="this.form.submit()">
+            <option {% if project.status == "Submitted" %}selected{% endif %}>Submitted</option>
+            <option {% if project.status == "Approved" %}selected{% endif %}>Approved</option>
+            <option {% if project.status == "In Progress" %}selected{% endif %}>In Progress</option>
+            <option {% if project.status == "Completed" %}selected{% endif %}>Completed</option>
+        </select>
+    </form>
+</td>
+
                     <td>{{ project.created_at[:10] }}</td>
                 </tr>
                 {% endfor %}

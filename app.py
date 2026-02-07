@@ -5,6 +5,11 @@ import os
 import sqlite3
 
 app = Flask(__name__)
+from flask import redirect, url_for, session
+
+app.secret_key = "vikas-secret-key"  # change later
+ADMIN_USERNAME = "vikas"
+ADMIN_PASSWORD = "vikas123"
 
 # ------------------------
 # File upload config
@@ -105,6 +110,9 @@ def start_project():
     return render_template("start_project.html", year=datetime.now().year)
 @app.route("/admin")
 def admin():
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin_login"))
+
     conn = get_db_connection()
     projects = conn.execute(
         "SELECT * FROM projects ORDER BY created_at DESC"
@@ -116,6 +124,35 @@ def admin():
         projects=projects,
         year=datetime.now().year
     )
+@app.route("/admin-login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin_logged_in"] = True
+            return redirect(url_for("admin"))
+
+        return render_template("admin_login.html", error=True)
+
+    return render_template("admin_login.html")
+@app.route("/update-status/<int:project_id>", methods=["POST"])
+def update_status(project_id):
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin_login"))
+
+    new_status = request.form.get("status")
+
+    conn = get_db_connection()
+    conn.execute(
+        "UPDATE projects SET status = ? WHERE id = ?",
+        (new_status, project_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("admin"))
 
 
 # ------------------------
