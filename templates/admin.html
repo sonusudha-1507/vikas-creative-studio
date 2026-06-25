@@ -1,67 +1,275 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard — VIKAS{% endblock %}
+
+{% block title %}
+Admin Dashboard — VIKAS
+{% endblock %}
+
+
 
 {% block content %}
-<section class="admin-dashboard">
-    <h2>Project Submissions</h2>
 
-    <div class="admin-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Client</th>
-                    <th>Email</th>
-                    <th>Type</th>
-                    <th>File</th>
-                    <th>Status</th>
-                    <th>Submitted</th>
-                   <th>Service</th>
-                   <th>Package</th>
-                   <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in projects %}
-                <tr>
-                    <td>{{ project.id }}</td>
-                    <td>{{ project.name }}</td>
-                    <td>{{ project.email }}</td>
-                    <td>{{ project.project_type }}</td>
-                    <td>
-                        {% if project.filename %}
-                            {{ project.filename }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-                    <td>
-    <form method="POST" action="/update-status/{{ project.id }}">
-        <a 
+
+<section class="admin-dashboard">
+
+
+<h2>
+Project Submissions
+</h2>
+
+
+
+<div class="admin-table">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Client</th>
+
+<th>Email</th>
+
+<th>Type</th>
+
+<th>File</th>
+
+<th>Status</th>
+
+<th>Delivery</th>
+
+<th>Chat</th>
+
+<th>Submitted</th>
+
+<th>Service</th>
+
+<th>Package</th>
+
+<th>Price</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for project in projects %}
+
+
+<tr>
+
+
+<td>
+{{project.id}}
+</td>
+
+
+
+<td>
+{{project.name}}
+</td>
+
+
+
+<td>
+{{project.email}}
+</td>
+
+
+
+<td>
+{{project.project_type}}
+</td>
+
+
+
+<td>
+
+{% if project.filename %}
+
+{{project.filename}}
+
+{% else %}
+
+—
+
+{% endif %}
+
+</td>
+
+
+
+
+<td>
+
+
+<form 
+method="POST"
+action="/update-status/{{project.id}}">
+
+
+<select 
+name="status"
+onchange="this.form.submit()">
+
+
+<option {% if project.status=="Submitted" %}selected{% endif %}>
+
+Submitted
+
+</option>
+
+
+
+<option {% if project.status=="In Progress" %}selected{% endif %}>
+
+In Progress
+
+</option>
+
+
+
+<option {% if project.status=="Delivered" %}selected{% endif %}>
+
+Delivered
+
+</option>
+
+
+</select>
+
+
+</form>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<form
+
+action="/deliver/{{project.id}}"
+
+method="POST"
+
+enctype="multipart/form-data">
+
+
+<input
+
+type="file"
+
+name="delivery"
+
+required>
+
+
+<button class="cta-btn magnetic">
+
+Upload Delivery
+
+</button>
+
+
+</form>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<a
+
 href="/admin/project/{{project.id}}/chat"
+
 class="cta-btn magnetic">
+
 
 Message Client
 
+
 </a>
-        <select name="status" onchange="this.form.submit()">
-            <option {% if project.status == "Submitted" %}selected{% endif %}>Submitted</option>
-            <option {% if project.status == "Approved" %}selected{% endif %}>Approved</option>
-            <option {% if project.status == "In Progress" %}selected{% endif %}>In Progress</option>
-            <option {% if project.status == "Completed" %}selected{% endif %}>Completed</option>
-        </select>
-    </form>
+
+
 </td>
 
-                    <td>{{ project.created_at[:10] }}</td>
-                    <td>{{ project.service_name }}</td>
-                    <td>{{ project.package_name }}</td>
-                    <td>₹{{ project.price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
+
+
+
+<td>
+
+{{project.created_at[:10]}}
+
+</td>
+
+
+
+<td>
+
+{{project.service_name}}
+
+</td>
+
+
+
+<td>
+
+{{project.package_name}}
+
+</td>
+
+
+
+
+<td>
+
+₹{{project.price}}
+
+</td>
+
+
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
 </section>
+
+
+
 {% endblock %}

@@ -640,3 +640,18 @@ color:white;
 border:none;
 
 }
+.status-badge {
+
+box-shadow:
+0 0 20px rgba(143,140,255,.4);
+
+}
+
+
+.dash-card:hover {
+
+transform:translateY(-8px);
+
+transition:.3s;
+
+}

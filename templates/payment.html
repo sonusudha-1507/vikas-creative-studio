@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<section class="auth-page">
+
+
+<h1>
+Complete Payment
+</h1>
+
+
+<button 
+id="pay-btn"
+class="cta-btn magnetic">
+
+Pay Now
+
+</button>
+
+
+</section>
+
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+<script>
+
+
+var options = {
+
+
+"key":"{{key}}",
+
+
+"amount":"{{order.amount}}",
+
+
+"currency":"INR",
+
+
+"name":"VIKAS Creative Studio",
+
+
+"description":"Creative Editing Order",
+
+
+"order_id":"{{order.id}}",
+
+
+"handler":function(response){
+
+
+alert(
+"Payment Successful"
+);
+
+
+window.location.href="/client-dashboard";
+
+
+}
+
+};
+
+
+document
+.getElementById("pay-btn")
+.onclick=function(){
+
+
+var rzp =
+new Razorpay(options);
+
+
+rzp.open();
+
+
+}
+
+
+</script>
+
+
+{% endblock %}

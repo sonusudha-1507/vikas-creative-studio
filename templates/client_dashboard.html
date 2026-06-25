@@ -70,6 +70,22 @@ Price:
 {{ project.status }}
 
 </span>
+{% if project.delivery_file %}
+
+
+<br><br>
+
+
+<a 
+href="/download/{{project.delivery_file}}"
+class="cta-btn magnetic">
+
+Download Final Delivery
+
+</a>
+
+
+{% endif %}
 <br><br>
 
 <a 

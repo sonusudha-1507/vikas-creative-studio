@@ -36,7 +36,44 @@
             </ul>
 
             <a href="/start-project" class="cta-btn">Start a Project</a>
+            {% if session.get("user_id") %}
 
+
+<a href="/client-dashboard">
+
+Dashboard
+
+</a>
+
+
+<a href="/logout">
+
+Logout
+
+</a>
+
+
+
+{% else %}
+
+
+<a href="/login">
+
+Login
+
+</a>
+
+
+<a 
+href="/signup"
+class="cta-btn magnetic">
+
+Sign Up
+
+</a>
+
+
+{% endif %} 
         </nav>
     </header>
 
