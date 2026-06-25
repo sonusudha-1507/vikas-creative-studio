@@ -526,4 +526,74 @@ main {
     gap: 30px;
     margin-top: 40px;
 }
+.service-card {
+    min-height: 220px;
 
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    padding: 35px;
+}
+
+
+.service-card .cta-btn {
+
+    margin-top: 25px;
+
+    align-self: flex-start;
+
+}
+.portfolio-grid {
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(280px,1fr));
+
+gap:30px;
+
+}
+
+
+.portfolio-card {
+
+height:300px;
+
+position:relative;
+
+overflow:hidden;
+
+border-radius:20px;
+
+background:#111;
+
+}
+
+
+.portfolio-image,
+.portfolio-video {
+
+position:absolute;
+
+inset:0;
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+}
+
+
+.portfolio-video {
+
+opacity:0;
+
+transition:.4s;
+
+pointer-events:none;
+
+}

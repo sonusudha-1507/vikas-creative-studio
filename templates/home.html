@@ -3,68 +3,175 @@
 {% block title %}VIKAS — Premium Creative Editing{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <h1>High-End Creative Editing<br>for Digital Brands</h1>
-    <p>Precision. Cinematic quality. Professional workflow.</p>
+<section class="hero cinematic-hero">
 
-    <div class="hero-actions">
-        <a href="/start-project" class="cta-btn magnetic">Start a Project</a>
-        <a href="#" class="secondary-link">View Work</a>
+
+    <div class="hero-content">
+
+        <span class="hero-tag">
+            VIKAS CREATIVE STUDIO
+        </span>
+
+
+        <h1 class="hero-title">
+            Transforming Ideas Into
+            <br>
+            Cinematic Visual Stories
+        </h1>
+
+
+        <p class="hero-subtitle">
+
+            Premium video editing, photo enhancement,
+            reels and digital content crafted with
+            precision.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+            <a href="/start-project"
+            class="cta-btn magnetic">
+                Start Project
+            </a>
+
+
+            <a href="#portfolio"
+            class="secondary-link">
+                Explore Work →
+            </a>
+
+
+        </div>
+
     </div>
+
+
+    <div class="floating-element edit-card">
+        4K EDITING
+    </div>
+
+
+    <div class="floating-element color-card">
+        COLOR GRADE
+    </div>
+
+
 </section>
-<section class="portfolio-preview">
+<section class="portfolio-showcase" id="portfolio">
+
     <div class="section-header">
-        <h2>Selected Work</h2>
-        <p>A glimpse into precision-crafted edits.</p>
+
+        <span class="section-tag">
+            SELECTED WORK
+        </span>
+
+        <h2>
+            Crafted Visual
+            Experiences
+        </h2>
+
+        <p>
+            Premium edits designed for creators,
+            brands and digital storytelling.
+        </p>
+
     </div>
 
-    <div class="portfolio-grid">
 
-    <div class="portfolio-card">
-        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
-        <video class="portfolio-video" muted loop preload="metadata">
-            <source src="{{ url_for('static', filename='videos/vedit8.mp4') }}" type="video/mp4">
-        </video>
-    </div>
 
-    <div class="portfolio-card">
-        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
-        <video class="portfolio-video" muted loop preload="metadata">
-            <source src="{{ url_for('static', filename='videos/vedit9.mp4') }}" type="video/mp4">
-        </video>
-    </div>
+    <div class="showcase-grid">
 
-    <div class="portfolio-card">
-        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
-        <video class="portfolio-video" muted loop preload="metadata">
-            <source src="{{ url_for('static', filename='videos/vedit10.mp4') }}" type="video/mp4">
-        </video>
-    </div>
 
-</div>
+        <div class="showcase-card">
 
-        <div class="portfolio-item">
-            <div class="portfolio-thumb">
-                <span class="portfolio-label">Photo Retouch</span>
+            <video muted loop preload="metadata">
+
+                <source 
+                src="{{ url_for('static',
+                filename='videos/vedit8.mp4') }}"
+                type="video/mp4">
+
+            </video>
+
+
+            <div class="showcase-info">
+
+                <span>
+                    VIDEO EDIT
+                </span>
+
+                <h3>
+                    Cinematic Story Cut
+                </h3>
+
             </div>
+
         </div>
 
-        <div class="portfolio-item">
-            <div class="portfolio-thumb">
-                <span class="portfolio-label">Reel / Short</span>
+
+
+        <div class="showcase-card">
+
+            <video muted loop preload="metadata">
+
+                <source 
+                src="{{ url_for('static',
+                filename='videos/vedit9.mp4') }}"
+                type="video/mp4">
+
+            </video>
+
+
+            <div class="showcase-info">
+
+                <span>
+                    SHORT FORM
+                </span>
+
+                <h3>
+                    Viral Reel Edit
+                </h3>
+
             </div>
+
         </div>
 
-        <div class="portfolio-item">
-            <div class="portfolio-thumb">
-                <span class="portfolio-label">Thumbnail Design</span>
+
+
+
+        <div class="showcase-card">
+
+            <video muted loop preload="metadata">
+
+                <source 
+                src="{{ url_for('static',
+                filename='videos/vedit10.mp4') }}"
+                type="video/mp4">
+
+            </video>
+
+
+            <div class="showcase-info">
+
+                <span>
+                    SOCIAL CONTENT
+                </span>
+
+                <h3>
+                    Brand Visual Edit
+                </h3>
+
             </div>
+
         </div>
+
+
+
     </div>
 
-    <div class="portfolio-cta">
-        <a href="#" class="secondary-link">View Full Portfolio →</a>
-    </div>
+
 </section>
 <section class="services">
     <div class="section-header">

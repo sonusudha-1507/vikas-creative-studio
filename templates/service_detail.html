@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ service.title }} — VIKAS
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="service-detail">
+
+
+<h1>
+{{ service.title }}
+</h1>
+
+
+<p>
+{{ service.description }}
+</p>
+
+
+
+<div class="package-grid">
+
+
+<div class="package-card">
+
+<h2>Basic</h2>
+
+<h3>₹999</h3>
+
+<p>
+Clean professional edit.
+</p>
+
+
+<a class="cta-btn magnetic"
+
+href="/start-project?service={{service.title}}&package=Basic&price=999">
+
+Continue
+
+</a>
+
+
+</div>
+
+
+
+<div class="package-card featured">
+
+<h2>Standard</h2>
+
+<h3>₹2999</h3>
+
+<p>
+Advanced editing with effects.
+</p>
+
+
+<a class="cta-btn magnetic"
+
+href="/start-project?service={{service.title}}&package=Standard&price=2999">
+
+Continue
+
+</a>
+
+
+</div>
+
+
+
+<div class="package-card">
+
+<h2>Premium</h2>
+
+<h3>₹4999</h3>
+
+<p>
+Full cinematic production quality.
+</p>
+
+
+<a class="cta-btn magnetic"
+
+href="/start-project?service={{service.title}}&package=Premium&price=4999">
+
+Continue
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+{% endblock %}

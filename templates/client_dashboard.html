@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Dashboard — VIKAS
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="dashboard">
+
+
+<h1>
+Welcome, {{session["user_name"]}}
+</h1>
+
+
+<p>
+Manage your creative projects.
+</p>
+
+
+
+<div class="dashboard-grid">
+
+
+<div class="dash-card">
+
+<h2>
+Active Projects
+</h2>
+
+<p>
+Your ongoing edits appear here.
+</p>
+
+
+</div>
+
+
+
+<div class="dash-card">
+
+<h2>
+Messages
+</h2>
+
+<p>
+Chat system coming soon.
+</p>
+
+
+</div>
+
+
+
+<div class="dash-card">
+
+<h2>
+Completed Work
+</h2>
+
+<p>
+Delivered files will appear here.
+</p>
+
+
+</div>
+
+
+</div>
+
+
+<a href="/logout"
+class="secondary-link">
+
+Logout
+
+</a>
+
+
+
+</section>
+
+
+{% endblock %}
+

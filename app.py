@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
@@ -54,6 +55,21 @@ def init_db():
             created_at TEXT
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            name TEXT NOT NULL,
+
+            email TEXT UNIQUE NOT NULL,
+
+            password TEXT NOT NULL,
+
+            created_at TEXT NOT NULL
+
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -61,10 +77,65 @@ def init_db():
 # ------------------------
 # ROUTES
 # ------------------------
-
 @app.route("/")
 def home():
-    return render_template("home.html", year=datetime.now().year)
+    return render_template(
+        "home.html",
+        year=datetime.now().year
+    )
+@app.route("/services/<service_name>")
+def service_detail(service_name):
+
+    services = {
+
+        "photo-editing": {
+            "title": "Photo Editing",
+            "description":
+            "Professional retouching, color grading and creative photo edits."
+        },
+
+
+        "video-editing": {
+            "title": "Video Editing",
+            "description":
+            "Cinematic videos, storytelling edits and brand content."
+        },
+
+
+        "reels-editing": {
+            "title": "Reels Editing",
+            "description":
+            "High-retention Instagram reels and short-form videos."
+        },
+
+
+        "thumbnail-design": {
+            "title": "Thumbnail Design",
+            "description":
+            "Eye-catching thumbnails and digital graphics."
+        }
+
+    }
+
+
+    service = services.get(service_name)
+
+
+    if not service:
+        return "Service not found",404
+
+
+    return render_template(
+
+        "service_detail.html",
+
+        service=service,
+
+        service_slug=service_name,
+
+        year=datetime.now().year
+
+    )
 
 
 # ------------------------
@@ -216,7 +287,102 @@ def track_project():
 
     return render_template("track_project.html", projects=projects, year=datetime.now().year)
 
+@app.route("/signup", methods=["GET","POST"])
+def signup():
 
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+
+        hashed_password = generate_password_hash(password)
+
+
+        conn = get_db_connection()
+
+
+        conn.execute(
+            """
+            INSERT INTO users
+            (name,email,password,created_at)
+
+            VALUES (?,?,?,?)
+            """,
+
+            (
+                name,
+                email,
+                hashed_password,
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+        )
+
+
+        conn.commit()
+        conn.close()
+
+
+        return redirect("/login")
+
+
+    return render_template(
+        "signup.html"
+    )
+@app.route("/login", methods=["GET","POST"])
+def login():
+
+    if request.method=="POST":
+
+        email=request.form.get("email")
+        password=request.form.get("password")
+
+
+        conn=get_db_connection()
+
+
+        user=conn.execute(
+            "SELECT * FROM users WHERE email=?",
+            (email,)
+        ).fetchone()
+
+
+        conn.close()
+
+
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
+
+            session["user_id"]=user["id"]
+
+            session["user_name"]=user["name"]
+
+            return redirect("/client-dashboard")
+
+
+    return render_template(
+        "login.html"
+    )
+@app.route("/client-dashboard")
+def client_dashboard():
+
+    if "user_id" not in session:
+
+        return redirect("/login")
+
+
+    return render_template(
+        "client_dashboard.html"
+    )
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/")
 # ------------------------
 # START APP
 # ------------------------

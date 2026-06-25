@@ -7,10 +7,20 @@
 
     <!-- Base CSS (we’ll add files later) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cinematic.css') }}">
 
     {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Cinematic Background -->
+    <div class="cinematic-bg">
+    <div class="gradient-orb orb-one"></div>
+    <div class="gradient-orb orb-two"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
     <!-- Navigation -->
     <header class="site-header">
@@ -45,7 +55,7 @@
 
     <!-- Global JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/cinematic.js') }}"></script>
     {% block scripts %}{% endblock %}
 <!-- Smooth scroll (Lenis) -->
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
