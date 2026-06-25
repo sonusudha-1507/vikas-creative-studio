@@ -13,64 +13,108 @@ Dashboard — VIKAS
 
 
 <h1>
-Welcome, {{session["user_name"]}}
+Welcome, {{ session["user_name"] }}
 </h1>
 
 
 <p>
-Manage your creative projects.
+Your creative workspace.
 </p>
+
+
+
+<h2>
+My Projects
+</h2>
 
 
 
 <div class="dashboard-grid">
 
 
-<div class="dash-card">
-
-<h2>
-Active Projects
-</h2>
-
-<p>
-Your ongoing edits appear here.
-</p>
+{% if projects %}
 
 
-</div>
-
+{% for project in projects %}
 
 
 <div class="dash-card">
 
+
 <h2>
-Messages
+{{ project.project_type }}
 </h2>
 
+
 <p>
-Chat system coming soon.
+Service:
+{{ project.service_name }}
 </p>
 
 
+<p>
+Package:
+{{ project.package_name }}
+</p>
+
+
+<p>
+Price:
+₹{{ project.price }}
+</p>
+
+
+
+<span class="status-badge">
+
+{{ project.status }}
+
+</span>
+<br><br>
+
+<a 
+href="/project/{{project.id}}/chat"
+class="cta-btn magnetic">
+
+Open Chat
+
+</a>
+
 </div>
 
+
+{% endfor %}
+
+
+
+{% else %}
 
 
 <div class="dash-card">
 
-<h2>
-Completed Work
-</h2>
+<h2>No Projects Yet</h2>
 
 <p>
-Delivered files will appear here.
+Start your first creative project.
 </p>
 
 
-</div>
+<a href="/services"
+class="cta-btn magnetic">
+
+Explore Services
+
+</a>
 
 
 </div>
+
+
+{% endif %}
+
+
+</div>
+
 
 
 <a href="/logout"
@@ -86,4 +130,3 @@ Logout
 
 
 {% endblock %}
-

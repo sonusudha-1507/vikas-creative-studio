@@ -544,3 +544,99 @@ border:
 1px solid rgba(255,255,255,.15);
 
 }
+/* ORDER STATUS */
+
+.status-badge {
+
+display:inline-block;
+
+margin-top:20px;
+
+padding:10px 18px;
+
+border-radius:30px;
+
+
+background:
+rgba(143,140,255,.25);
+
+
+border:
+1px solid #8f8cff;
+
+
+color:white;
+
+font-size:14px;
+
+}
+/* CHAT SYSTEM */
+
+
+.chat-page {
+
+min-height:100vh;
+
+padding:130px 8%;
+
+}
+
+
+
+.chat-box {
+
+max-width:800px;
+
+margin:auto;
+
+}
+
+
+
+.message-card {
+
+margin:20px 0;
+
+padding:20px;
+
+
+border-radius:20px;
+
+
+background:
+rgba(255,255,255,.08);
+
+
+}
+
+
+
+.chat-form {
+
+display:flex;
+
+gap:20px;
+
+max-width:800px;
+
+margin:40px auto;
+
+}
+
+
+
+.chat-form input {
+
+flex:1;
+
+padding:15px;
+
+border-radius:15px;
+
+background:#111;
+
+color:white;
+
+border:none;
+
+}

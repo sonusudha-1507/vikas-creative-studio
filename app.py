@@ -70,6 +70,21 @@ def init_db():
 
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            project_id INTEGER NOT NULL,
+
+            sender TEXT NOT NULL,
+
+            message TEXT NOT NULL,
+
+            created_at TEXT NOT NULL
+
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -178,10 +193,6 @@ def start_project():
         conn.execute(
             """
             INSERT INTO projects
-            (name, email, project_type, description, filename,
-             service_name, package_name, price, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
             (
                 name,
                 email,
@@ -191,6 +202,23 @@ def start_project():
                 service_name,
                 package_name,
                 price,
+                user_id,
+                created_at
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+
+            (
+                name,
+                email,
+                project_type,
+                description,
+                filename,
+                service_name,
+                package_name,
+                price,
+                session.get("user_id"),
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
         )
@@ -374,8 +402,34 @@ def client_dashboard():
         return redirect("/login")
 
 
+    conn=get_db_connection()
+
+
+    projects=conn.execute(
+
+        """
+        SELECT *
+        FROM projects
+        WHERE user_id=?
+        ORDER BY created_at DESC
+        """,
+
+        (
+        session["user_id"],
+        )
+
+    ).fetchall()
+
+
+    conn.close()
+
+
     return render_template(
-        "client_dashboard.html"
+
+        "client_dashboard.html",
+
+        projects=projects
+
     )
 @app.route("/logout")
 def logout():
@@ -383,6 +437,151 @@ def logout():
     session.clear()
 
     return redirect("/")
+@app.route("/project/<int:project_id>/chat",
+methods=["GET","POST"])
+def project_chat(project_id):
+
+    if "user_id" not in session:
+
+        return redirect("/login")
+
+
+    conn=get_db_connection()
+
+
+    if request.method=="POST":
+
+        msg=request.form.get("message")
+
+
+        conn.execute(
+
+            """
+            INSERT INTO messages
+            (
+            project_id,
+            sender,
+            message,
+            created_at
+            )
+
+            VALUES (?,?,?,?)
+            """,
+
+            (
+            project_id,
+            session["user_name"],
+            msg,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+
+        )
+
+
+        conn.commit()
+
+
+
+    messages=conn.execute(
+
+        """
+        SELECT *
+        FROM messages
+        WHERE project_id=?
+        ORDER BY created_at
+        """,
+
+        (project_id,)
+
+    ).fetchall()
+
+
+
+    conn.close()
+
+
+    return render_template(
+
+        "chat.html",
+
+        messages=messages,
+
+        project_id=project_id
+
+    )
+@app.route(
+"/admin/project/<int:project_id>/chat",
+methods=["GET","POST"]
+)
+def admin_project_chat(project_id):
+
+    if not session.get("admin_logged_in"):
+
+        return redirect("/admin-login")
+
+
+    conn=get_db_connection()
+
+
+    if request.method=="POST":
+
+        msg=request.form.get("message")
+
+
+        conn.execute(
+
+        """
+        INSERT INTO messages
+        (
+        project_id,
+        sender,
+        message,
+        created_at
+        )
+
+        VALUES (?,?,?,?)
+        """,
+
+        (
+        project_id,
+        "Vikas",
+        msg,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+
+        )
+
+
+        conn.commit()
+
+
+
+    messages=conn.execute(
+
+    """
+    SELECT *
+    FROM messages
+    WHERE project_id=?
+    ORDER BY created_at
+    """,
+
+    (project_id,)
+
+    ).fetchall()
+
+
+    conn.close()
+
+
+    return render_template(
+
+    "chat.html",
+
+    messages=messages,
+
+    project_id=project_id
+
+    )
 # ------------------------
 # START APP
 # ------------------------

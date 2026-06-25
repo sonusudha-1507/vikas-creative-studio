@@ -38,6 +38,13 @@
                     </td>
                     <td>
     <form method="POST" action="/update-status/{{ project.id }}">
+        <a 
+href="/admin/project/{{project.id}}/chat"
+class="cta-btn magnetic">
+
+Message Client
+
+</a>
         <select name="status" onchange="this.form.submit()">
             <option {% if project.status == "Submitted" %}selected{% endif %}>Submitted</option>
             <option {% if project.status == "Approved" %}selected{% endif %}>Approved</option>

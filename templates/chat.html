@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Project Chat
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="chat-page">
+
+
+<h1>
+Project Conversation
+</h1>
+
+
+
+<div class="chat-box">
+
+
+{% for msg in messages %}
+
+
+<div class="message-card">
+
+
+<strong>
+{{msg.sender}}
+</strong>
+
+
+<p>
+{{msg.message}}
+</p>
+
+
+<small>
+
+{{msg.created_at}}
+
+</small>
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+<form method="POST"
+class="chat-form">
+
+
+<input
+
+name="message"
+
+placeholder="Type message..."
+
+required>
+
+
+<button class="cta-btn magnetic">
+
+Send
+
+</button>
+
+
+</form>
+
+
+
+</section>
+
+
+{% endblock %}
