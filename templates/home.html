@@ -8,7 +8,7 @@
     <p>Precision. Cinematic quality. Professional workflow.</p>
 
     <div class="hero-actions">
-        <a href="/start-project" class="cta-btn">Start a Project</a>
+        <a href="/start-project" class="cta-btn magnetic">Start a Project</a>
         <a href="#" class="secondary-link">View Work</a>
     </div>
 </section>
@@ -19,11 +19,29 @@
     </div>
 
     <div class="portfolio-grid">
-        <div class="portfolio-item">
-            <div class="portfolio-thumb">
-                <span class="portfolio-label">Video Edit</span>
-            </div>
-        </div>
+
+    <div class="portfolio-card">
+        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
+        <video class="portfolio-video" muted loop preload="metadata">
+            <source src="{{ url_for('static', filename='videos/vedit8.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="portfolio-card">
+        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
+        <video class="portfolio-video" muted loop preload="metadata">
+            <source src="{{ url_for('static', filename='videos/vedit9.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="portfolio-card">
+        <img src="https://via.placeholder.com/600x400" class="portfolio-image">
+        <video class="portfolio-video" muted loop preload="metadata">
+            <source src="{{ url_for('static', filename='videos/vedit10.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
+</div>
 
         <div class="portfolio-item">
             <div class="portfolio-thumb">
@@ -63,7 +81,7 @@
                 <li>Standard turnaround</li>
                 <li>Email support</li>
             </ul>
-            <a href="/start-project" class="cta-btn">Start a Project</a>
+            <a href="/start-project" class="cta-btn magnetic">Start a Project</a>
         </div>
 
         <div class="service-card featured">
@@ -74,7 +92,7 @@
                 <li>Priority turnaround</li>
                 <li>Creative direction</li>
             </ul>
-            <a href="#" class="cta-btn">Start a Project</a>
+            <a href="#" class="cta-btn magnetic">Start a Project</a>
         </div>
 
         <div class="service-card">
@@ -85,7 +103,7 @@
                 <li>Top priority</li>
                 <li>Direct communication</li>
             </ul>
-            <a href="#" class="cta-btn">Start a Project</a>
+            <a href="#" class="cta-btn magnetic">Start a Project</a>
         </div>
     </div>
 </section>
@@ -125,7 +143,7 @@
         </div>
     </div>
 </section>
-<section class="contact-cta">
+<section class="contact-cta magnetic">
     <div class="contact-box">
         <h2>Let’s Work Together</h2>
         <p>
@@ -134,7 +152,7 @@
         </p>
 
         <div class="contact-actions">
-            <a href="/start-project" class="cta-btn">Start a Project</a>
+            <a href="/start-project" class="cta-btn magnetic">Start a Project</a>
             <a href="mailto:vikas.creative@gmail.com" class="secondary-link">
                 Email directly
             </a>

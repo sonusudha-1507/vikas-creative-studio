@@ -12,6 +12,10 @@
         </p>
 
         <form method="POST" enctype="multipart/form-data">
+            <!-- Auto-filled package info -->
+            <input type="hidden" name="service" value="{{ service }}">
+            <input type="hidden" name="package" value="{{ package }}">
+            <input type="hidden" name="price" value="{{ price }}">
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" name="name" required>
@@ -42,7 +46,7 @@
                 <input type="file" name="project_file">
                 <small>Accepted: images, videos, zip, pdf (max 200MB)</small>
             </div>
-            <button type="submit" class="cta-btn">
+            <button type="submit" class="cta-btn magnetic">
                 Submit Project Request
             </button>
         </form>

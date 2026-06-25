@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Track Your Project — VIKAS{% endblock %}
+
+{% block content %}
+<section class="project-form">
+    <div class="form-box">
+        <h2>Track Your Project</h2>
+        <p>Enter the email used during submission.</p>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <button type="submit" class="cta-btn">Track</button>
+        </form>
+
+        {% if projects is not none %}
+            <hr style="margin:2rem 0; border-color:rgba(255,255,255,0.1);">
+
+            {% if projects|length == 0 %}
+                <p style="color:#9AA3B2;">No projects found for this email.</p>
+            {% else %}
+                <table style="width:100%; font-size:0.9rem;">
+                    <tr>
+                        <th align="left">ID</th>
+                        <th align="left">Type</th>
+                        <th align="left">Status</th>
+                        <th align="left">Submitted</th>
+                    </tr>
+                    {% for p in projects %}
+                    <tr>
+                        <td>{{ p.id }}</td>
+                        <td>{{ p.project_type }}</td>
+                        <td>{{ p.status }}</td>
+                        <td>{{ p.created_at[:10] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -19,7 +19,7 @@
 
             <ul class="nav-links">
                 <li><a href="/">Work</a></li>
-                <li><a href="#">Services</a></li>
+                <li><a href="/services">Services</a></li>
                 <li><a href="#">Pricing</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
@@ -41,10 +41,27 @@
     </footer>
     <!-- GSAP -->
     <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
     <!-- Global JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
     {% block scripts %}{% endblock %}
+<!-- Smooth scroll (Lenis) -->
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+<script>
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => 1 - Math.pow(1 - t, 3),
+  smoothWheel: true
+})
+
+function raf(time) {
+  lenis.raf(time)
+  requestAnimationFrame(raf)
+}
+
+requestAnimationFrame(raf)
+</script>
 </body>
 </html>

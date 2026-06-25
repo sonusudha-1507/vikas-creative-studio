@@ -174,7 +174,28 @@ main {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 2rem;
 }
+.portfolio-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    height: 320px;
+    background: #111;
+}
 
+.portfolio-image,
+.portfolio-video {
+    position: absolutr;
+    inset: 0;
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+}
+
+.portfolio-video {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
 .portfolio-item {
     position: relative;
     overflow: hidden;
@@ -262,6 +283,28 @@ main {
 .service-card.featured {
     border: 1px solid rgba(79, 140, 255, 0.6);
     box-shadow: 0 0 0 1px rgba(79, 140, 255, 0.2);
+}
+.services-page {
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.service-card {
+    background: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
 }
 /* =========================
    About & Trust
@@ -437,3 +480,50 @@ main {
 .admin-table tr:last-child td {
     border-bottom: none;
 }
+.service-detail {
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+.service-desc {
+    color: var(--text-muted);
+    margin: 1rem auto 3rem;
+    max-width: 600px;
+}
+
+.package-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.package-card {
+    background: var(--bg-surface);
+    padding: 2rem;
+    border-radius: 16px;
+}
+
+.package-card.highlight {
+    border: 2px solid #7b6cff;
+}
+
+.package-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+.package-card li {
+    margin: 0.5rem 0;
+}
+/* ============================= */
+/* PORTFOLIO GRID LAYOUT */
+/* ============================= */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+

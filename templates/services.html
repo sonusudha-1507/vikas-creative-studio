@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Services — VIKAS{% endblock %}
+
+{% block content %}
+<section class="services-page">
+    <h2>Choose Your Service</h2>
+
+    <div class="services-grid">
+
+        <div class="service-card">
+            <h3>Photo Editing</h3>
+            <p>Professional retouching & cinematic color grading.</p>
+            <span>Starting ₹499</span>
+            <a href="/services/photo-editing" class="cta-btn magnetic">View Packages</a>
+        </div>
+
+        <div class="service-card">
+            <h3>Video Editing</h3>
+            <p>High-impact edits for YouTube & brands.</p>
+            <span>Starting ₹999</span>
+            <a href="/services/video-editing" class="cta-btn magnetic">View Packages</a>
+        </div>
+
+        <div class="service-card">
+            <h3>Instagram Reels</h3>
+            <p>Engaging short-form content edits.</p>
+            <span>Starting ₹799</span>
+            <a href="/services/reels-editing" class="cta-btn magnetic">View Packages</a>
+        </div>
+
+        <div class="service-card">
+            <h3>Thumbnail Design</h3>
+            <p>High CTR YouTube thumbnails.</p>
+            <span>Starting ₹299</span>
+            <a href="/services/thumbnails" class="cta-btn">View Packages</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

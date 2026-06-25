@@ -1,6 +1,23 @@
-venv/
+# Python
 __pycache__/
 *.pyc
-.env
-database/
+
+# Virtual environment
+venv/
+
+# Database
+*.db
+
+# Uploaded client files
 uploads/
+
+# Local tunneling tools
+ngrok
+ngrok*
+cloudflared*
+
+# Environment variables
+.env
+
+# OS
+.DS_Store

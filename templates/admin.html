@@ -17,6 +17,9 @@
                     <th>File</th>
                     <th>Status</th>
                     <th>Submitted</th>
+                   <th>Service</th>
+                   <th>Package</th>
+                   <th>Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +48,9 @@
 </td>
 
                     <td>{{ project.created_at[:10] }}</td>
+                    <td>{{ project.service_name }}</td>
+                    <td>{{ project.package_name }}</td>
+                    <td>₹{{ project.price }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

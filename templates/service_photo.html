@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Photo Editing — VIKAS{% endblock %}
+
+{% block content %}
+<section class="service-detail">
+
+    <h1>Professional Photo Editing</h1>
+    <p class="service-desc">
+        Cinematic color grading, retouching, skin correction, lighting balance,
+        and high-end visual enhancement.
+    </p>
+
+    <div class="package-grid">
+
+        <div class="package-card">
+            <h3>Basic</h3>
+            <p class="price">₹499</p>
+            <ul>
+                <li>Basic retouch</li>
+                <li>Color correction</li>
+                <li>1 revision</li>
+                <li>3 day delivery</li>
+            </ul>
+            <a href="/start-project?service=Photo Editing&package=Basic&price=499" class="cta-btn magnetic">Continue</a>
+        </div>
+
+        <div class="package-card highlight">
+            <h3>Standard</h3>
+            <p class="price">₹999</p>
+            <ul>
+                <li>Advanced retouch</li>
+                <li>Skin smoothing</li>
+                <li>2 revisions</li>
+                <li>2 day delivery</li>
+            </ul>
+            <a href="/start-project?service=Photo Editing&package=Standard&price=999" class="cta-btn magnetic">Continue</a>
+        </div>
+
+        <div class="package-card">
+            <h3>Premium</h3>
+            <p class="price">₹1999</p>
+            <ul>
+                <li>Full cinematic edit</li>
+                <li>Lighting enhancement</li>
+                <li>Unlimited revisions</li>
+                <li>1 day delivery</li>
+            </ul>
+            <a href="/start-project" class="cta-btn magnetic">Continue</a>
+        </div>
+
+    </div>
+
+</section>
+{% endblock %}
