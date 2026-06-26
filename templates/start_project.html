@@ -12,6 +12,22 @@
         </p>
 
         <form method="POST" enctype="multipart/form-data">
+            <input 
+type="hidden"
+name="service"
+value="{{service}}">
+
+
+<input
+type="hidden"
+name="package"
+value="{{package}}">
+
+
+<input
+type="hidden"
+name="price"
+value="{{price}}">
             <!-- Auto-filled package info -->
             <input type="hidden" name="service" value="{{ service }}">
             <input type="hidden" name="package" value="{{ package }}">

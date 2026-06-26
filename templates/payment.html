@@ -8,15 +8,29 @@
 
 
 <h1>
-Complete Payment
+Complete Your Payment
 </h1>
 
 
-<button 
+<h2>
+₹{{project.price}}
+</h2>
+
+
+<p>
+{{project.service_name}}
+
+-
+{{project.package_name}}
+</p>
+
+
+
+<button
 id="pay-btn"
 class="cta-btn magnetic">
 
-Pay Now
+Pay Securely
 
 </button>
 
@@ -25,48 +39,78 @@ Pay Now
 
 
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src=
+"https://checkout.razorpay.com/v1/checkout.js">
+</script>
 
 
 
 <script>
 
 
-var options = {
+var options={
 
 
-"key":"{{key}}",
+key:"{{key}}",
 
 
-"amount":"{{order.amount}}",
+amount:"{{order.amount}}",
 
 
-"currency":"INR",
+currency:"INR",
 
 
-"name":"VIKAS Creative Studio",
+name:"VIKAS Creative Studio",
 
 
-"description":"Creative Editing Order",
+order_id:"{{order.id}}",
 
 
-"order_id":"{{order.id}}",
+handler:function(response){
 
 
-"handler":function(response){
+fetch(
+"/payment-success/{{project.id}}",
+{
+
+method:"POST",
 
 
-alert(
-"Payment Successful"
-);
+headers:{
+
+"Content-Type":
+
+"application/json"
+
+},
 
 
-window.location.href="/client-dashboard";
+body:JSON.stringify({
+
+payment_id:
+
+response.razorpay_payment_id
+
+})
+
+}
+
+)
+
+.then(()=>{
+
+window.location.href=
+
+"/client-dashboard"
+
+})
 
 
 }
 
+
 };
+
 
 
 document
@@ -74,17 +118,14 @@ document
 .onclick=function(){
 
 
-var rzp =
-new Razorpay(options);
-
-
-rzp.open();
+new Razorpay(options).open();
 
 
 }
 
 
 </script>
+
 
 
 {% endblock %}

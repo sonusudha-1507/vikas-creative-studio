@@ -20,8 +20,9 @@ from datetime import datetime
 import sqlite3
 import os
 import razorpay
+from dotenv import load_dotenv
 
-
+load_dotenv()
 # =====================================
 # APP CONFIG
 # =====================================
@@ -35,11 +36,10 @@ app.secret_key = "vikas-secret-key"
 
 razorpay_client = razorpay.Client(
     auth=(
-        "YOUR_KEY_ID",
-        "YOUR_KEY_SECRET"
+        os.getenv("RAZORPAY_KEY_ID"),
+        os.getenv("RAZORPAY_KEY_SECRET")
     )
 )
-
 
 # Admin
 
@@ -212,7 +212,25 @@ def init_db():
     """
     )
 
+    cursor.execute("""
+CREATE TABLE IF NOT EXISTS payments(
 
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+project_id INTEGER,
+
+user_id INTEGER,
+
+razorpay_payment_id TEXT,
+
+amount INTEGER,
+
+status TEXT,
+
+created_at TEXT
+
+)
+""")
 
     conn.commit()
 
@@ -373,7 +391,7 @@ def start_project():
         conn=get_db_connection()
 
 
-        conn.execute(
+        cursor = conn.execute(
         """
 
         INSERT INTO projects(
@@ -418,7 +436,9 @@ def start_project():
         conn.close()
 
 
-        return redirect("/thank-you")
+        return redirect(
+    f"/pay/{cursor.lastrowid}"
+)
 
 
     return render_template(
@@ -821,7 +841,103 @@ def chat(project_id):
 
     )
 
+@app.route(
+"/admin/project/<int:project_id>/chat",
+methods=["GET","POST"]
+)
+def admin_project_chat(project_id):
 
+
+    if not session.get("admin_logged_in"):
+
+        return redirect("/admin-login")
+
+
+
+    conn=get_db_connection()
+
+
+
+    if request.method=="POST":
+
+
+        conn.execute(
+
+        """
+
+        INSERT INTO messages(
+
+        project_id,
+
+        sender,
+
+        message,
+
+        created_at
+
+        )
+
+        VALUES(?,?,?,?)
+
+        """,
+
+        (
+
+        project_id,
+
+        "Vikas",
+
+        request.form.get("message"),
+
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        )
+
+        )
+
+
+        conn.commit()
+
+
+
+
+    messages=conn.execute(
+
+        """
+
+        SELECT *
+
+        FROM messages
+
+        WHERE project_id=?
+
+        ORDER BY created_at
+
+        """,
+
+        (
+
+        project_id,
+
+        )
+
+    ).fetchall()
+
+
+
+    conn.close()
+
+
+
+    return render_template(
+
+        "chat.html",
+
+        messages=messages,
+
+        project_id=project_id
+
+    )
 
 
 
@@ -953,7 +1069,105 @@ def create_payment():
         order=order
 
     )
+@app.route("/pay/<int:project_id>")
+def pay(project_id):
 
+
+    conn=get_db_connection()
+
+
+    project=conn.execute(
+
+        "SELECT * FROM projects WHERE id=?",
+
+        (project_id,)
+
+    ).fetchone()
+
+
+    conn.close()
+
+
+
+    order=razorpay_client.order.create({
+
+        "amount":
+
+        int(project["price"] if project["price"] not in [None,"None"] else 0) * 100,
+
+
+        "currency":
+
+        "INR",
+
+
+        "payment_capture":
+
+        1
+
+    })
+
+
+
+    return render_template(
+
+        "payment.html",
+
+        project=project,
+
+        order=order,
+
+        key=os.getenv(
+            "RAZORPAY_KEY_ID"
+        )
+
+    )
+@app.route(
+"/payment-success/<int:project_id>",
+methods=["POST"]
+)
+def payment_success(project_id):
+
+
+    data=request.json
+
+
+    conn=get_db_connection()
+
+
+    conn.execute(
+
+    """
+
+    UPDATE projects
+
+    SET
+
+    payment_status='Paid',
+
+    payment_id=?
+
+    WHERE id=?
+
+    """,
+
+    (
+
+    data["payment_id"],
+
+    project_id
+
+    )
+
+    )
+
+
+    conn.commit()
+
+    conn.close()
+
+
+    return "success"
 
 
 
