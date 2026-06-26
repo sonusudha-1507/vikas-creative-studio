@@ -23,6 +23,7 @@ import razorpay
 from dotenv import load_dotenv
 from routes.auth import auth_bp
 from routes.client import client_bp
+from routes.admin import admin_bp
 
 load_dotenv()
 # =====================================
@@ -32,6 +33,7 @@ load_dotenv()
 app = Flask(__name__)
 app.register_blueprint(auth_bp)
 app.register_blueprint(client_bp)
+app.register_blueprint(admin_bp)
 
 app.secret_key = "vikas-secret-key"
 
