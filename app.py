@@ -21,6 +21,7 @@ import sqlite3
 import os
 import razorpay
 from dotenv import load_dotenv
+from routes.auth import auth_bp
 
 load_dotenv()
 # =====================================
@@ -28,6 +29,7 @@ load_dotenv()
 # =====================================
 
 app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 app.secret_key = "vikas-secret-key"
 
@@ -468,125 +470,6 @@ def thank_you():
 # =====================================
 # AUTH
 # =====================================
-
-
-@app.route("/signup", methods=["GET","POST"])
-def signup():
-
-    if request.method=="POST":
-
-
-        conn=get_db_connection()
-
-
-        conn.execute(
-
-        """
-
-        INSERT INTO users(
-
-        name,email,password,created_at
-
-        )
-
-        VALUES(?,?,?,?)
-
-        """,
-
-        (
-
-        request.form.get("name"),
-
-        request.form.get("email"),
-
-        generate_password_hash(
-        request.form.get("password")
-        ),
-
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        )
-
-        )
-
-
-        conn.commit()
-
-        conn.close()
-
-
-        return redirect("/login")
-
-
-    return render_template(
-        "signup.html"
-    )
-
-
-
-
-@app.route("/login", methods=["GET","POST"])
-def login():
-
-
-    if request.method=="POST":
-
-
-        conn=get_db_connection()
-
-
-        user=conn.execute(
-
-            "SELECT * FROM users WHERE email=?",
-
-            (
-
-            request.form.get("email"),
-
-            )
-
-        ).fetchone()
-
-
-        conn.close()
-
-
-
-        if user and check_password_hash(
-
-            user["password"],
-
-            request.form.get("password")
-
-        ):
-
-
-            session["user_id"]=user["id"]
-
-            session["user_name"]=user["name"]
-
-
-            return redirect(
-                "/client-dashboard"
-            )
-
-
-    return render_template(
-        "login.html"
-    )
-
-
-
-
-
-@app.route("/logout")
-def logout():
-
-    session.clear()
-
-    return redirect("/")
-
-
 
 
 # =====================================
