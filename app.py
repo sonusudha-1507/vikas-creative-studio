@@ -22,6 +22,7 @@ import os
 import razorpay
 from dotenv import load_dotenv
 from routes.auth import auth_bp
+from routes.client import client_bp
 
 load_dotenv()
 # =====================================
@@ -30,6 +31,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.register_blueprint(auth_bp)
+app.register_blueprint(client_bp)
 
 app.secret_key = "vikas-secret-key"
 
@@ -464,70 +466,6 @@ def thank_you():
     return render_template(
         "thank_you.html"
     )
-
-
-
-# =====================================
-# AUTH
-# =====================================
-
-
-# =====================================
-# CLIENT DASHBOARD
-# =====================================
-
-
-@app.route("/client-dashboard")
-def client_dashboard():
-
-
-    if "user_id" not in session:
-
-        return redirect("/login")
-
-
-
-    conn=get_db_connection()
-
-
-
-    projects=conn.execute(
-
-    """
-
-    SELECT *
-
-    FROM projects
-
-    WHERE user_id=?
-
-    ORDER BY created_at DESC
-
-    """,
-
-    (
-
-    session["user_id"],
-
-    )
-
-    ).fetchall()
-
-
-
-    conn.close()
-
-
-
-    return render_template(
-
-        "client_dashboard.html",
-
-        projects=projects
-
-    )
-
-
 
 
 
