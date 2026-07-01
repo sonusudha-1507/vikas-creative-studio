@@ -25,6 +25,7 @@ from routes.auth import auth_bp
 from routes.client import client_bp
 from routes.admin import admin_bp
 from routes.chat import chat_bp
+from routes.services import services_bp
 
 load_dotenv()
 # =====================================
@@ -36,6 +37,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(services_bp)
 
 app.secret_key = "vikas-secret-key"
 
@@ -262,96 +264,6 @@ def home():
 
     )
 
-
-
-@app.route("/services")
-def services():
-
-    return render_template(
-
-        "services.html",
-
-        year=datetime.now().year
-
-    )
-
-
-
-
-@app.route("/services/<service_name>")
-def service_detail(service_name):
-
-
-    services={
-
-
-        "photo-editing":{
-
-            "title":"Photo Editing",
-
-            "description":
-            "Professional photo retouching and creative edits"
-
-        },
-
-
-        "video-editing":{
-
-            "title":"Video Editing",
-
-            "description":
-            "Cinematic storytelling video edits"
-
-        },
-
-
-
-        "reels-editing":{
-
-            "title":"Reels Editing",
-
-            "description":
-            "High retention short form content"
-
-        },
-
-
-
-        "thumbnail-design":{
-
-            "title":"Thumbnail Design",
-
-            "description":
-            "Creative thumbnails and posters"
-
-        }
-
-
-    }
-
-
-
-    service=services.get(service_name)
-
-
-
-    if not service:
-
-        return "Service not found",404
-
-
-
-    return render_template(
-
-        "service_detail.html",
-
-        service=service,
-
-        service_slug=service_name,
-
-        year=datetime.now().year
-
-    )
 # =====================================
 # START PROJECT / ORDER
 # =====================================
