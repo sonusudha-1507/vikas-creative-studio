@@ -24,6 +24,7 @@ from dotenv import load_dotenv
 from routes.auth import auth_bp
 from routes.client import client_bp
 from routes.admin import admin_bp
+from routes.chat import chat_bp
 
 load_dotenv()
 # =====================================
@@ -34,6 +35,7 @@ app = Flask(__name__)
 app.register_blueprint(auth_bp)
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(chat_bp)
 
 app.secret_key = "vikas-secret-key"
 
@@ -581,186 +583,6 @@ def update_status(project_id):
 # =====================================
 # CHAT SYSTEM
 # =====================================
-
-
-@app.route("/project/<int:project_id>/chat",
-methods=["GET","POST"])
-def chat(project_id):
-
-
-    conn=get_db_connection()
-
-
-    if request.method=="POST":
-
-
-        sender=session.get(
-
-            "user_name",
-
-            "Vikas"
-
-        )
-
-
-        conn.execute(
-
-        """
-
-        INSERT INTO messages(
-
-        project_id,
-
-        sender,
-
-        message,
-
-        created_at
-
-        )
-
-        VALUES(?,?,?,?)
-
-        """,
-
-        (
-
-        project_id,
-
-        sender,
-
-        request.form.get("message"),
-
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        )
-
-        )
-
-
-        conn.commit()
-
-
-
-    messages=conn.execute(
-
-    "SELECT * FROM messages WHERE project_id=?",
-
-    (project_id,)
-
-    ).fetchall()
-
-
-
-    conn.close()
-
-
-
-    return render_template(
-
-        "chat.html",
-
-        messages=messages
-
-    )
-
-@app.route(
-"/admin/project/<int:project_id>/chat",
-methods=["GET","POST"]
-)
-def admin_project_chat(project_id):
-
-
-    if not session.get("admin_logged_in"):
-
-        return redirect("/admin-login")
-
-
-
-    conn=get_db_connection()
-
-
-
-    if request.method=="POST":
-
-
-        conn.execute(
-
-        """
-
-        INSERT INTO messages(
-
-        project_id,
-
-        sender,
-
-        message,
-
-        created_at
-
-        )
-
-        VALUES(?,?,?,?)
-
-        """,
-
-        (
-
-        project_id,
-
-        "Vikas",
-
-        request.form.get("message"),
-
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        )
-
-        )
-
-
-        conn.commit()
-
-
-
-
-    messages=conn.execute(
-
-        """
-
-        SELECT *
-
-        FROM messages
-
-        WHERE project_id=?
-
-        ORDER BY created_at
-
-        """,
-
-        (
-
-        project_id,
-
-        )
-
-    ).fetchall()
-
-
-
-    conn.close()
-
-
-
-    return render_template(
-
-        "chat.html",
-
-        messages=messages,
-
-        project_id=project_id
-
-    )
 
 
 
