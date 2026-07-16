@@ -1,275 +1,881 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-Admin Dashboard — VIKAS
-{% endblock %}
-
-
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 
+<div class="admin-page">
 
-<section class="admin-dashboard">
+    <aside class="admin-sidebar">
 
+        <div class="brand">
 
-<h2>
-Project Submissions
-</h2>
+            <div class="brand-logo">
+                V
+            </div>
 
+            <div>
 
+                <h2>VIKAS</h2>
 
-<div class="admin-table">
+                <small>Creative Studio</small>
 
+            </div>
 
-<table>
+        </div>
 
+        <nav class="sidebar-menu">
 
-<thead>
+            <button
+                class="nav-btn active"
+                data-tab="dashboard">
 
-<tr>
+                <i class="fa-solid fa-chart-line"></i>
 
-<th>ID</th>
+                Dashboard
 
-<th>Client</th>
+            </button>
 
-<th>Email</th>
+            <button
+                class="nav-btn"
+                data-tab="projects">
 
-<th>Type</th>
+                <i class="fa-solid fa-folder-open"></i>
 
-<th>File</th>
+                Projects
 
-<th>Status</th>
+            </button>
 
-<th>Delivery</th>
+            <button
+                class="nav-btn"
+                data-tab="clients">
 
-<th>Chat</th>
+                <i class="fa-solid fa-users"></i>
 
-<th>Submitted</th>
+                Clients
 
-<th>Service</th>
+            </button>
 
-<th>Package</th>
+            <button
+class="nav-btn"
+data-tab="messages"
+disabled
+style="opacity:.5;cursor:not-allowed;">
 
-<th>Price</th>
+            <button
+                class="nav-btn"
+                data-tab="payments">
 
-</tr>
+                <i class="fa-solid fa-wallet"></i>
 
-</thead>
+                Payments
 
+            </button>
 
+            <button
+                class="nav-btn"
+                data-tab="settings">
 
-<tbody>
+                <i class="fa-solid fa-gear"></i>
 
+                Settings
 
-{% for project in projects %}
+            </button>
 
+        </nav>
 
-<tr>
+    </aside>
 
+    <main class="admin-main">
 
-<td>
-{{project.id}}
-</td>
+        <header class="admin-header">
 
+            <div>
 
+                <h1>
 
-<td>
-{{project.name}}
-</td>
+                    Welcome Admin
 
+                </h1>
 
+                <p>
 
-<td>
-{{project.email}}
-</td>
+                    Manage projects, payments, chats and deliveries.
 
+                </p>
 
+            </div>
 
-<td>
-{{project.project_type}}
-</td>
+            <div class="header-actions">
 
+                <button
+                    id="refreshBtn"
+                    class="primary-btn">
 
+                    <i class="fa-solid fa-rotate"></i>
 
-<td>
+                    Refresh
 
-{% if project.filename %}
+                </button>
 
-{{project.filename}}
+                <a
+                    href="#"
+onclick="return false;"
+                    class="secondary-btn">
 
-{% else %}
+                    <i class="fa-solid fa-comments"></i>
 
-—
+                    Live Chat
 
-{% endif %}
+                </a>
 
-</td>
+                <a
+                    href="/"
+                    class="secondary-btn">
 
+                    <i class="fa-solid fa-globe"></i>
 
+                    Website
 
+                </a>
 
-<td>
+            </div>
 
+        </header>
 
-<form 
-method="POST"
-action="/update-status/{{project.id}}">
+        <section
+            id="dashboard"
+            class="tab-section active">
 
+            <div class="stats-grid">
 
-<select 
-name="status"
-onchange="this.form.submit()">
+                <div class="stat-card">
 
+                    <h4>Total Projects</h4>
 
-<option {% if project.status=="Submitted" %}selected{% endif %}>
+                    <h2>
 
-Submitted
+                        {{ projects|length }}
 
-</option>
+                    </h2>
 
+                </div>
 
+                <div class="stat-card">
 
-<option {% if project.status=="In Progress" %}selected{% endif %}>
+                    <h4>Paid Projects</h4>
 
-In Progress
+                    <h2>
 
-</option>
+                        {{ projects|selectattr("payment_status","equalto","Paid")|list|length }}
 
+                    </h2>
 
+                </div>
 
-<option {% if project.status=="Delivered" %}selected{% endif %}>
+                <div class="stat-card">
 
-Delivered
+                    <h4>Pending</h4>
 
-</option>
+                    <h2>
 
+                        {{ projects|rejectattr("payment_status","equalto","Paid")|list|length }}
 
-</select>
+                    </h2>
 
+                </div>
 
-</form>
+                <div class="stat-card">
 
+                    <h4>Delivered</h4>
 
-</td>
+                    <h2>
 
+                        {{ projects|selectattr("status","equalto","Delivered")|list|length }}
 
+                    </h2>
 
+                </div>
 
+            </div>
 
-<td>
+            <div class="panel">
 
+                <div class="panel-header">
 
-<form
+                    <h2>
 
-action="/deliver/{{project.id}}"
+                        Recent Projects
 
-method="POST"
+                    </h2>
 
-enctype="multipart/form-data">
+                </div>
 
+                <div class="table-wrapper">
 
-<input
+                    <table class="admin-table">
 
-type="file"
+                        <thead>
 
-name="delivery"
+                            <tr>
 
-required>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Service</th>
+                                <th>Package</th>
+                                <th>Price</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Delivery</th>
 
+                            </tr>
 
-<button class="cta-btn magnetic">
+                        </thead>
 
-Upload Delivery
+                        <tbody>
 
-</button>
+                        {% for project in projects %}
+                        <tr>
 
+    <td>
 
-</form>
+        #{{ project.id }}
 
+    </td>
 
-</td>
+    <td>
 
+        <strong>
 
+            {{ project.name }}
 
+        </strong>
 
+        <br>
 
-<td>
+        <small>
 
+            {{ project.email }}
+
+        </small>
+
+    </td>
+
+    <td>
+
+        {{ project.service_name }}
+
+    </td>
+
+    <td>
+
+        {{ project.package_name }}
+
+    </td>
+
+    <td>
+
+        ₹{{ project.price }}
+
+    </td>
+
+    <td>
+
+        {% if project.payment_status=="Paid" %}
+
+            <span class="status status-completed">
+
+                Paid
+
+            </span>
+
+        {% else %}
+
+            <span class="status status-pending">
+
+                Pending
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+
+        <form
+            action="/project/{{ project.id }}/status"
+            method="POST">
+
+            <select
+                name="status"
+                onchange="this.form.submit()">
+
+                <option
+                    value="Submitted"
+                    {% if project.status=="Submitted" %}selected{% endif %}>
+
+                    Submitted
+
+                </option>
+
+                <option
+                    value="Reviewing"
+                    {% if project.status=="Reviewing" %}selected{% endif %}>
+
+                    Reviewing
+
+                </option>
+
+                <option
+                    value="Editing"
+                    {% if project.status=="Editing" %}selected{% endif %}>
+
+                    Editing
+
+                </option>
+
+                <option
+                    value="Rendering"
+                    {% if project.status=="Rendering" %}selected{% endif %}>
+
+                    Rendering
+
+                </option>
+
+                <option
+                    value="Delivered"
+                    {% if project.status=="Delivered" %}selected{% endif %}>
+
+                    Delivered
+
+                </option>
+
+            </select>
+
+        </form>
+
+    </td>
+
+    <td>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+
+{% if project.delivery_file %}
 
 <a
+href="/download/{{ project.delivery_file }}"
+class="primary-btn">
 
-href="/admin/project/{{project.id}}/chat"
-
-class="cta-btn magnetic">
-
-
-Message Client
-
+Download
 
 </a>
 
+{% else %}
 
-</td>
+<form
+action="/deliver/{{ project.id }}"
+method="POST"
+enctype="multipart/form-data">
 
+<input
+type="file"
+name="delivery"
+required>
 
+<button
+class="primary-btn"
+type="submit">
 
+Upload
 
+</button>
 
-<td>
+</form>
 
-{{project.created_at[:10]}}
+{% endif %}
 
-</td>
-
-
-
-<td>
-
-{{project.service_name}}
-
-</td>
-
-
-
-<td>
-
-{{project.package_name}}
-
-</td>
-
-
-
-
-<td>
-
-₹{{project.price}}
-
-</td>
-
-
-
-
-</tr>
-
-
-
-{% endfor %}
-
-
-
-</tbody>
-
-
-</table>
 
 
 </div>
 
+</td>
 
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+
+    id="projects"
+
+    class="tab-section">
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h2>
+
+                All Projects
+
+            </h2>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Service</th>
+                        <th>Package</th>
+                        <th>Price</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for project in projects %}
+
+                <tr>
+
+                    <td>
+
+                        #{{ project.id }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.email }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.service_name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.package_name }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ project.price }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.payment_status }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.status }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+<section
+    id="clients"
+    class="tab-section">
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h2>
+
+                Clients
+
+            </h2>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Total Projects</th>
+                        <th>Paid</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for project in projects %}
+
+                <tr>
+
+                    <td>
+
+                        {{ project.name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.email }}
+
+                    </td>
+
+                    <td>
+
+                        1
+
+                    </td>
+
+                    <td>
+
+                        {% if project.payment_status=="Paid" %}
+
+                            <span class="status status-completed">
+
+                                Yes
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status status-pending">
+
+                                No
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </section>
 
 
+
+<section
+    id="messages"
+    class="tab-section">
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h2>
+
+                Live Chat
+
+            </h2>
+
+        </div>
+
+        <div class="empty-state">
+
+            <i class="fa-solid fa-comments"></i>
+
+            <h3>
+
+                Open the live chat dashboard
+
+            </h3>
+
+            <p>
+
+                Continue conversations with clients in real time.
+
+            </p>
+
+            <a
+
+               href="#"
+onclick="return false;"
+
+                class="primary-btn">
+
+                Coming Soon
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section
+    id="payments"
+    class="tab-section">
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h2>
+
+                Payments
+
+            </h2>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Project</th>
+                        <th>Client</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for project in projects %}
+
+                <tr>
+
+                    <td>
+
+                        #{{ project.id }}
+
+                    </td>
+
+                    <td>
+
+                        {{ project.name }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ project.price }}
+
+                    </td>
+
+                    <td>
+
+                        {% if project.payment_status=="Paid" %}
+
+                            <span class="status status-completed">
+
+                                Paid
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status status-pending">
+
+                                Pending
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section
+    id="settings"
+    class="tab-section">
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h2>
+
+                Settings
+
+            </h2>
+
+        </div>
+
+        <div class="settings-grid">
+
+            <div class="setting-card">
+
+                <h3>
+
+                    Website
+
+                </h3>
+
+                <p>
+
+                    Manage services, pricing and content.
+
+                </p>
+
+            </div>
+
+            <div class="setting-card">
+
+                <h3>
+
+                    Payments
+
+                </h3>
+
+                <p>
+
+                    Razorpay integration is active.
+
+                </p>
+
+            </div>
+
+            <div class="setting-card">
+
+                <h3>
+
+                    Storage
+
+                </h3>
+
+                <p>
+
+                    Uploaded files are stored locally.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+</div>
+<script>
+
+const navButtons = document.querySelectorAll(".nav-btn");
+const sections = document.querySelectorAll(".tab-section");
+
+navButtons.forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        navButtons.forEach(btn => btn.classList.remove("active"));
+
+        sections.forEach(section => section.classList.remove("active"));
+
+        this.classList.add("active");
+
+        const tab = this.dataset.tab;
+
+        document
+            .getElementById(tab)
+            .classList
+            .add("active");
+
+    });
+
+});
+
+
+const refreshBtn = document.getElementById("refreshBtn");
+
+if(refreshBtn){
+
+    refreshBtn.addEventListener("click",function(){
+
+        location.reload();
+
+    });
+
+}
+
+</script>
 
 {% endblock %}

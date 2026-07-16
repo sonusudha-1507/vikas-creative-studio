@@ -1,131 +1,168 @@
 {% extends "base.html" %}
 
+{% block title %}Complete Payment{% endblock %}
 
 {% block content %}
+<div class="payment-page">
 
+<div class="payment-card">
 
-<section class="auth-page">
+<div class="payment-header">
 
+<div class="success-icon">
 
-<h1>
-Complete Your Payment
-</h1>
+✓
 
+</div>
 
-<h2>
-₹{{project.price}}
-</h2>
-
+<h1>Complete Your Payment</h1>
 
 <p>
-{{project.service_name}}
 
--
-{{project.package_name}}
+Your project has been created successfully.
+
 </p>
 
+</div>
 
+<section class="payment-page">
 
-<button
-id="pay-btn"
-class="cta-btn magnetic">
+    <div class="payment-container">
 
-Pay Securely
+        <div class="payment-left">
 
-</button>
+            <h1>Complete Your Payment</h1>
 
+            <p>
+                Your project has been created successfully.
+            </p>
+
+            <div class="summary-card">
+
+                <div class="summary-row">
+                    <span>Project ID</span>
+                    <strong>#{{ project.id }}</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Client</span>
+                    <strong>{{ project.name }}</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Service</span>
+                    <strong>{{ project.service_name }}</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Package</span>
+                    <strong>{{ project.package_name }}</strong>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <strong>₹{{ project.price }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="payment-right">
+
+            <button
+                id="pay-btn"
+                class="primary-btn">
+
+                Pay ₹{{ project.price }}
+
+            </button>
+
+        </div>
+
+    </div>
 
 </section>
 
-
-
-<script src=
-"https://checkout.razorpay.com/v1/checkout.js">
-</script>
-
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 
+const options = {
 
-var options={
+    key: "{{ key }}",
 
+    amount: "{{ order.amount }}",
 
-key:"{{key}}",
+    currency: "INR",
 
+    name: "VIKAS Creative Studio",
 
-amount:"{{order.amount}}",
+    description: "{{ project.service_name }}",
 
+    order_id: "{{ order.id }}",
 
-currency:"INR",
+    handler: function (response) {
 
+        fetch("/payment-success/{{ project.id }}", {
 
-name:"VIKAS Creative Studio",
+            method: "POST",
 
+            headers: {
 
-order_id:"{{order.id}}",
+                "Content-Type": "application/json"
 
+            },
 
-handler:function(response){
+            body: JSON.stringify({
 
+                payment_id: response.razorpay_payment_id
 
-fetch(
-"/payment-success/{{project.id}}",
-{
+            })
 
-method:"POST",
+        })
 
+        .then(res => res.json())
 
-headers:{
+        .then(data => {
 
-"Content-Type":
+            if(data.success){
 
-"application/json"
+                window.location = data.redirect;
 
-},
+            }
+            else{
 
+                alert("Payment verification failed.");
 
-body:JSON.stringify({
+            }
 
-payment_id:
+        });
 
-response.razorpay_payment_id
+    },
 
-})
+    theme: {
 
-}
+        color: "#000000"
 
-)
-
-.then(()=>{
-
-window.location.href=
-
-"/client-dashboard"
-
-})
-
-
-}
-
+    }
 
 };
 
-
+const razorpay = new Razorpay(options);
 
 document
-.getElementById("pay-btn")
-.onclick=function(){
+    .getElementById("pay-btn")
+    .onclick = function(e){
 
+        razorpay.open();
 
-new Razorpay(options).open();
+        e.preventDefault();
 
-
-}
-
+    };
 
 </script>
+</div>
 
-
-
+</div>
 {% endblock %}

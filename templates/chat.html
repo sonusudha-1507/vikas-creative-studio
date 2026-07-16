@@ -1,86 +1,196 @@
 {% extends "base.html" %}
 
-
-{% block title %}
-Project Chat
-{% endblock %}
-
-
+{% block title %}Project Chat{% endblock %}
 
 {% block content %}
 
-
 <section class="chat-page">
 
+    <div class="chat-container">
 
-<h1>
-Project Conversation
-</h1>
+        <div class="chat-header">
 
+            <div>
 
+                <h2>{{ project.service_name }}</h2>
 
-<div class="chat-box">
+                <p>
 
+                    Project #{{ project.id }}
 
-{% for msg in messages %}
+                </p>
 
+            </div>
 
-<div class="message-card">
+            <div>
 
+                <span class="status status-{{ project.status|lower }}">
 
-<strong>
-{{msg.sender}}
-</strong>
+                    {{ project.status }}
 
+                </span>
 
-<p>
-{{msg.message}}
-</p>
+            </div>
 
+        </div>
 
-<small>
+        <div
+            id="messages"
+            class="messages">
 
-{{msg.created_at}}
+            {% for msg in messages %}
 
-</small>
+            <div class="message {{ msg.sender|lower }}">
 
+                <div class="bubble">
 
-</div>
+                    <strong>
 
+                        {{ msg.sender }}
 
-{% endfor %}
+                    </strong>
 
+                    <p>
 
+                        {{ msg.message }}
 
-</div>
+                    </p>
 
+                    <small>
 
+                        {{ msg.created_at }}
 
-<form method="POST"
-class="chat-form">
+                    </small>
 
+                </div>
 
-<input
+            </div>
 
-name="message"
+            {% endfor %}
 
-placeholder="Type message..."
+        </div>
 
-required>
+        <form
+            id="chatForm">
 
+            <input
+                id="messageInput"
+                type="text"
+                placeholder="Type your message..."
+                autocomplete="off"
+                required>
 
-<button class="cta-btn magnetic">
+            <button
+                type="submit">
 
-Send
+                Send
 
-</button>
+            </button>
 
+        </form>
 
-</form>
-
-
+    </div>
 
 </section>
 
+<script>
+
+const form=document.getElementById("chatForm");
+
+const input=document.getElementById("messageInput");
+
+const container=document.getElementById("messages");
+
+function scrollBottom(){
+
+    container.scrollTop=container.scrollHeight;
+
+}
+
+scrollBottom();
+
+form.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    fetch(
+
+        "/chat/send/{{ project.id }}",
+
+        {
+
+            method:"POST",
+
+            body:new URLSearchParams({
+
+                message:input.value
+
+            })
+
+        }
+
+    )
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(data.success){
+
+            input.value="";
+
+            loadMessages();
+
+        }
+
+    });
+
+});
+
+function loadMessages(){
+
+    fetch(
+
+        "/chat/messages/{{ project.id }}"
+
+    )
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        container.innerHTML="";
+
+        data.forEach(function(msg){
+
+            container.innerHTML+=`
+
+            <div class="message ${msg.sender.toLowerCase()}">
+
+                <div class="bubble">
+
+                    <strong>${msg.sender}</strong>
+
+                    <p>${msg.message}</p>
+
+                    <small>${msg.created_at}</small>
+
+                </div>
+
+            </div>
+
+            `;
+
+        });
+
+        scrollBottom();
+
+    });
+
+}
+
+setInterval(loadMessages,2000);
+
+</script>
 
 {% endblock %}

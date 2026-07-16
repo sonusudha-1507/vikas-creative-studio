@@ -8,6 +8,8 @@ from flask import (
 )
 
 from models.database import get_db_connection
+from datetime import datetime
+
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -57,8 +59,8 @@ def admin_dashboard():
     )
 
 
-@admin_bp.route("/update-status/<int:project_id>", methods=["POST"])
-def update_status(project_id):
+@admin_bp.route("/project/<int:project_id>/status", methods=["POST"])
+def update_project_status(project_id):
 
     if not session.get("admin_logged_in"):
         return redirect("/admin-login")
@@ -67,16 +69,73 @@ def update_status(project_id):
 
     conn = get_db_connection()
 
+    project = conn.execute(
+        """
+        SELECT *
+
+        FROM projects
+
+        WHERE id=?
+        """,
+        (
+            project_id,
+        )
+    ).fetchone()
+
+    if project is None:
+
+        conn.close()
+
+        return redirect("/admin")
+
     conn.execute(
         """
         UPDATE projects
+
         SET status=?
+
         WHERE id=?
         """,
-        (status, project_id)
+        (
+            status,
+            project_id
+        )
+    )
+
+    conn.execute(
+        """
+        INSERT INTO notifications(
+
+            user_id,
+
+            project_id,
+
+            title,
+
+            description,
+
+            created_at
+
+        )
+
+        VALUES(
+
+            ?,?,?,?,?,?
+
+        )
+        """,
+        (
+            project["user_id"],
+            project_id,
+            "Project Status Updated",
+            f"Your project is now '{status}'.",
+            0,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
     )
 
     conn.commit()
+
     conn.close()
 
     return redirect("/admin")

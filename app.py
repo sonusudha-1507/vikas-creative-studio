@@ -3,46 +3,60 @@ from flask import (
     render_template,
     request,
     redirect,
-    url_for,
     session,
     send_from_directory
 )
 
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
-
 from werkzeug.utils import secure_filename
-
-from datetime import datetime
+from dotenv import load_dotenv
 
 import sqlite3
-import os
 import razorpay
-from dotenv import load_dotenv
+import os
+
 from routes.auth import auth_bp
 from routes.client import client_bp
 from routes.admin import admin_bp
 from routes.chat import chat_bp
 from routes.services import services_bp
+from routes.payment import payment_bp
+from flask import render_template, request, redirect, url_for, flash
+from datetime import datetime
+from flask import jsonify
+from models.database import init_database
 
 load_dotenv()
-# =====================================
-# APP CONFIG
-# =====================================
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv(
+    "SECRET_KEY",
+    "vikas-secret-key"
+)
+
+# -----------------------------
+# Register Blueprints
+# -----------------------------
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(chat_bp)
 app.register_blueprint(services_bp)
+app.register_blueprint(payment_bp)
 
-app.secret_key = "vikas-secret-key"
+# -----------------------------
+# Config
+# -----------------------------
 
+UPLOAD_FOLDER = "uploads"
+DELIVERY_FOLDER = "deliveries"
 
-# Razorpay test config
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["DELIVERY_FOLDER"] = DELIVERY_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
+
+DB_PATH = "database/projects.db"
 
 razorpay_client = razorpay.Client(
     auth=(
@@ -51,713 +65,230 @@ razorpay_client = razorpay.Client(
     )
 )
 
-# Admin
-
-ADMIN_USERNAME = "vikas"
-ADMIN_PASSWORD = "vikas123"
-
-
-
-# =====================================
-# FILE CONFIG
-# =====================================
-
-UPLOAD_FOLDER = "uploads"
-
-DELIVERY_FOLDER = "deliveries"
-
-
-ALLOWED_EXTENSIONS = {
-
-    "png",
-    "jpg",
-    "jpeg",
-    "mp4",
-    "mov",
-    "zip",
-    "pdf"
-
-}
-
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-app.config["DELIVERY_FOLDER"] = DELIVERY_FOLDER
-
-app.config["MAX_CONTENT_LENGTH"] = (
-    200 * 1024 * 1024
-)
-
-
-
-def allowed_file(filename):
-
-    return (
-
-        "." in filename
-
-        and
-
-        filename.rsplit(
-            ".",
-            1
-        )[1].lower()
-
-        in ALLOWED_EXTENSIONS
-
-    )
-
-
-
-# =====================================
-# DATABASE
-# =====================================
-
-DB_PATH = "database/projects.db"
-
-
+# -----------------------------
+# Helpers
+# -----------------------------
 
 def get_db_connection():
-
     conn = sqlite3.connect(DB_PATH)
-
     conn.row_factory = sqlite3.Row
-
     return conn
-
-
 
 
 def init_db():
 
     conn = get_db_connection()
-
     cursor = conn.cursor()
 
-
-
-    cursor.execute(
-    """
-
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS projects(
-
         id INTEGER PRIMARY KEY AUTOINCREMENT,
 
         name TEXT,
-
         email TEXT,
 
         project_type TEXT,
-
         description TEXT,
 
         filename TEXT,
 
         service_name TEXT,
-
         package_name TEXT,
 
         price INTEGER,
 
+        payment_status TEXT DEFAULT 'Pending',
+        payment_id TEXT,
 
         user_id INTEGER,
 
-
         delivery_file TEXT,
-
 
         status TEXT DEFAULT 'Submitted',
 
-
         created_at TEXT
-
     )
-
-
-    """
-    )
-
-
-
-    cursor.execute(
-    """
-
-    CREATE TABLE IF NOT EXISTS users(
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        name TEXT NOT NULL,
-
-        email TEXT UNIQUE NOT NULL,
-
-        password TEXT NOT NULL,
-
-        created_at TEXT NOT NULL
-
-    )
-
-    """
-    )
-
-
-
-
-    cursor.execute(
-    """
-
-    CREATE TABLE IF NOT EXISTS messages(
-
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-        project_id INTEGER NOT NULL,
-
-        sender TEXT NOT NULL,
-
-        message TEXT NOT NULL,
-
-        created_at TEXT NOT NULL
-
-    )
-
-    """
-    )
+    """)
 
     cursor.execute("""
-CREATE TABLE IF NOT EXISTS payments(
+    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        password TEXT,
+        created_at TEXT
+    )
+    """)
 
-id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS messages(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        project_id INTEGER,
+        sender TEXT,
+        message TEXT,
+        created_at TEXT
+    )
+    """)
 
-project_id INTEGER,
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS payments(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-user_id INTEGER,
+        project_id INTEGER,
+        user_id INTEGER,
 
-razorpay_payment_id TEXT,
+        razorpay_payment_id TEXT,
 
-amount INTEGER,
+        amount INTEGER,
 
-status TEXT,
+        status TEXT,
 
-created_at TEXT
-
-)
-""")
+        created_at TEXT
+    )
+    """)
 
     conn.commit()
-
     conn.close()
 
 
-
-# =====================================
-# BASIC ROUTES
-# =====================================
-
-
-@app.route("/")
-def home():
-
-    return render_template(
-
-        "home.html",
-
-        year=datetime.now().year
-
-    )
-
-# =====================================
-# START PROJECT / ORDER
-# =====================================
-
-@app.route("/start-project", methods=["GET","POST"])
-def start_project():
-
-    if request.method=="POST":
-
-        name=request.form.get("name")
-        email=request.form.get("email")
-        project_type=request.form.get("project_type")
-        description=request.form.get("description")
-
-        service_name=request.form.get("service")
-        package_name=request.form.get("package")
-        price=request.form.get("price")
-
-
-        file=request.files.get("project_file")
-
-        filename=None
-
-
-        if file and allowed_file(file.filename):
-
-            filename=secure_filename(
-                file.filename
-            )
-
-
-            file.save(
-
-                os.path.join(
-
-                    app.config["UPLOAD_FOLDER"],
-
-                    filename
-
-                )
-
-            )
-
-
-        conn=get_db_connection()
-
-
-        cursor = conn.execute(
-        """
-
-        INSERT INTO projects(
-
-            name,
-            email,
-            project_type,
-            description,
-            filename,
-            service_name,
-            package_name,
-            price,
-            user_id,
-            created_at
-
-        )
-
-        VALUES(?,?,?,?,?,?,?,?,?,?)
-
-        """,
-
-        (
-
-            name,
-            email,
-            project_type,
-            description,
-            filename,
-            service_name,
-            package_name,
-            price,
-            session.get("user_id"),
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        )
-
-        )
-
-
-        conn.commit()
-
-        conn.close()
-
-
-        return redirect(
-    f"/pay/{cursor.lastrowid}"
-)
-
-
-    return render_template(
-
-        "start_project.html",
-
-        service=request.args.get("service"),
-
-        package=request.args.get("package"),
-
-        price=request.args.get("price")
-
-    )
-
-
-
-
-@app.route("/thank-you")
-def thank_you():
-
-    return render_template(
-        "thank_you.html"
-    )
-
-
-
-# =====================================
-# ADMIN
-# =====================================
-
-
-@app.route("/admin-login", methods=["GET","POST"])
-def admin_login():
-
-
-    if request.method=="POST":
-
-
-        if (
-
-        request.form.get("username")==ADMIN_USERNAME
-
-        and
-
-        request.form.get("password")==ADMIN_PASSWORD
-
-        ):
-
-
-            session["admin_logged_in"]=True
-
-
-            return redirect("/admin")
-
-
-
-    return render_template(
-        "admin_login.html"
-    )
-
-
-
-
-@app.route("/admin")
-def admin():
-
-
-    if not session.get("admin_logged_in"):
-
-        return redirect("/admin-login")
-
-
-
-    conn=get_db_connection()
-
-
-
-    projects=conn.execute(
-
-        "SELECT * FROM projects ORDER BY created_at DESC"
-
-    ).fetchall()
-
-
-
-    conn.close()
-
-
-
-    return render_template(
-
-        "admin.html",
-
-        projects=projects
-
-    )
-
-
-
-
-@app.route("/update-status/<int:project_id>",methods=["POST"])
-def update_status(project_id):
-
-
-    conn=get_db_connection()
-
-
-    conn.execute(
-
-        "UPDATE projects SET status=? WHERE id=?",
-
-        (
-
-        request.form.get("status"),
-
-        project_id
-
-        )
-
-    )
-
-
-    conn.commit()
-
-    conn.close()
-
-
-    return redirect("/admin")
-
-
-
-
-
-# =====================================
-# CHAT SYSTEM
-# =====================================
-
-
-
-# =====================================
-# DELIVERY SYSTEM
-# =====================================
-
+# -----------------------------
+# Delivery
+# -----------------------------
 
 @app.route("/deliver/<int:project_id>", methods=["POST"])
 def deliver_project(project_id):
 
+    if not session.get("admin_logged_in"):
+        return redirect("/admin-login")
 
-    file=request.files.get("delivery")
+    file = request.files.get("delivery")
 
+    if not file or file.filename == "":
+        return redirect("/admin")
 
+    filename = secure_filename(file.filename)
 
-    if file and file.filename:
+    os.makedirs(
+        app.config["DELIVERY_FOLDER"],
+        exist_ok=True
+    )
 
-
-        filename=secure_filename(
-            file.filename
-        )
-
-
-        file.save(
-
+    file.save(
         os.path.join(
-
             app.config["DELIVERY_FOLDER"],
-
             filename
-
         )
+    )
 
-        )
+    conn = get_db_connection()
 
-
-
-        conn=get_db_connection()
-
-
-        conn.execute(
-
+    project = conn.execute(
         """
+        SELECT *
 
-        UPDATE projects
-
-        SET delivery_file=?,
-
-        status='Delivered'
+        FROM projects
 
         WHERE id=?
-
         """,
-
         (
-
-        filename,
-
-        project_id
-
+            project_id,
         )
+    ).fetchone()
 
-        )
-
-
-        conn.commit()
+    if project is None:
 
         conn.close()
 
-
-        print(
-            "DELIVERY SAVED:",
-            filename
-        )
-
-
-
-    return redirect("/admin")
-
-
-
-
-
-@app.route("/download/<filename>")
-def download(filename):
-
-
-    return send_from_directory(
-
-        app.config["DELIVERY_FOLDER"],
-
-        filename,
-
-        as_attachment=True
-
-    )
-
-
-
-
-
-# =====================================
-# RAZORPAY FOUNDATION
-# =====================================
-
-
-@app.route("/create-payment",methods=["POST"])
-def create_payment():
-
-
-    order=razorpay_client.order.create({
-
-        "amount":
-        int(request.form.get("price"))*100,
-
-        "currency":"INR",
-
-        "payment_capture":1
-
-    })
-
-
-
-    return render_template(
-
-        "payment.html",
-
-        order=order
-
-    )
-@app.route("/pay/<int:project_id>")
-def pay(project_id):
-
-
-    conn=get_db_connection()
-
-
-    project=conn.execute(
-
-        "SELECT * FROM projects WHERE id=?",
-
-        (project_id,)
-
-    ).fetchone()
-
-
-    conn.close()
-
-
-
-    order=razorpay_client.order.create({
-
-        "amount":
-
-        int(project["price"] if project["price"] not in [None,"None"] else 0) * 100,
-
-
-        "currency":
-
-        "INR",
-
-
-        "payment_capture":
-
-        1
-
-    })
-
-
-
-    return render_template(
-
-        "payment.html",
-
-        project=project,
-
-        order=order,
-
-        key=os.getenv(
-            "RAZORPAY_KEY_ID"
-        )
-
-    )
-@app.route(
-"/payment-success/<int:project_id>",
-methods=["POST"]
-)
-def payment_success(project_id):
-
-
-    data=request.json
-
-
-    conn=get_db_connection()
-
+        return redirect("/admin")
 
     conn.execute(
+        """
+        UPDATE projects
 
-    """
+        SET
 
-    UPDATE projects
+            delivery_file=?,
+            status='Delivered'
 
-    SET
-
-    payment_status='Paid',
-
-    payment_id=?
-
-    WHERE id=?
-
-    """,
-
-    (
-
-    data["payment_id"],
-
-    project_id
-
+        WHERE id=?
+        """,
+        (
+            filename,
+            project_id
+        )
     )
 
-    )
+    conn.execute(
+        """
+        INSERT INTO notifications(
 
+            user_id,
+
+            project_id,
+
+            title,
+
+            description,
+
+            created_at
+
+        )
+
+        VALUES(
+
+            ?,?,?,?,?
+
+        )
+        """,
+        (
+            project["user_id"],
+            project_id,
+            "Project Delivered",
+            "Your project has been completed. You can now download the final files from your dashboard.",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+    )
 
     conn.commit()
 
     conn.close()
 
+    return redirect("/admin")
 
-    return "success"
+@app.route("/download/<filename>")
+def download(filename):
 
-
-
-
-# =====================================
-# START SERVER
-# =====================================
-
-
-if __name__=="__main__":
-
-
-    os.makedirs(
-        "uploads",
-        exist_ok=True
+    return send_from_directory(
+        app.config["DELIVERY_FOLDER"],
+        filename,
+        as_attachment=True
     )
 
 
-    os.makedirs(
-        "deliveries",
-        exist_ok=True
-    )
+# -----------------------------
+# Payment Blueprint bridge
+# -----------------------------
 
+@app.context_processor
+def inject_keys():
 
-    os.makedirs(
-        "database",
-        exist_ok=True
-    )
+    return {
 
+        "RAZORPAY_KEY_ID":
+        os.getenv("RAZORPAY_KEY_ID")
 
-    init_db()
+    }
 
+# -----------------------------
+# Start
+# -----------------------------
 
-    app.run(
-        debug=True
-    )
+if __name__ == "__main__":
+
+    os.makedirs("uploads", exist_ok=True)
+    os.makedirs("deliveries", exist_ok=True)
+    os.makedirs("database", exist_ok=True)
+
+    init_database()
+
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

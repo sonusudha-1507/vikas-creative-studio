@@ -1,22 +1,156 @@
 {% extends "base.html" %}
 
-{% block title %}Thank You — VIKAS{% endblock %}
+{% block title %}Thank You{% endblock %}
 
 {% block content %}
-<section style="padding: 120px 20px; text-align:center;">
-    <h1>Project Submitted Successfully</h1>
-    <p style="margin-top:20px; color:#aaa;">
-        Thank you for choosing VIKAS Creative Studio.
-        <br>
-        Your project request has been received.
-    </p>
+<div class="thankyou-page">
 
-    <p style="margin-top:10px; color:#aaa;">
-        You will receive updates via email.
-    </p>
+<div class="thankyou-card">
 
-    <a href="/" class="cta-btn" style="margin-top:40px; display:inline-block;">
-        Back to Home
-    </a>
+<section class="thank-you-page">
+
+    <div class="thank-you-card">
+
+        <div class="success-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div class="success-badge">
+
+<div class="success-circle">
+
+✓
+
+</div>
+
+</div>
+
+<h1>Thank You!</h1>
+
+<p class="thankyou-subtitle">
+
+Your payment has been received successfully.
+
+</p>
+
+        <div class="project-details">
+
+            <div class="project-summary">
+
+<div class="summary-row">
+
+<span>Project ID</span>
+
+<strong>#{{ project.id }}</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Client</span>
+
+<strong>{{ project.client_name }}</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Service</span>
+
+<strong>{{ project.service_name }}</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>Payment</span>
+
+<strong class="paid">
+
+{{ project.payment_status }}
+
+</strong>
+
+</div>
+
+</div>
+
+        <div class="timeline">
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<div class="timeline-content">
+
+<h4>Project Confirmed</h4>
+
+<p>Your order has been received successfully.</p>
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<div class="timeline-content">
+
+<h4>Review</h4>
+
+<p>Our team will review your uploaded files.</p>
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<div class="timeline-content">
+
+<h4>Editing Begins</h4>
+
+<p>Our editors will start working on your project.</p>
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-dot"></div>
+
+<div class="timeline-content">
+
+<h4>Delivery</h4>
+
+<p>You'll receive the completed files through your dashboard.</p>
+
+</div>
+
+</div>
+
+</div>
+        <div class="button-group">
+
+            <a href="/" class="primary-btn">
+                Back to Home
+            </a>
+
+            <a href="/admin" class="secondary-btn">
+                Admin Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
 </section>
+</div>
+
+</div>
+
 {% endblock %}

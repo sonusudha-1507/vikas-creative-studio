@@ -1,67 +1,193 @@
-from flask import Blueprint, render_template, request, redirect, session
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    session,
+    flash
+)
+
 from datetime import datetime
+
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 from models.database import get_db_connection
 
 auth_bp = Blueprint("auth", __name__)
 
 
+# ---------------------------------------------------
+# REGISTER
+# ---------------------------------------------------
+
 @auth_bp.route("/signup", methods=["GET", "POST"])
-def signup():
+def register():
 
-    if request.method == "POST":
+    if request.method == "GET":
 
-        conn = get_db_connection()
+        return render_template("signup.html")
 
-        conn.execute(
-            """
-            INSERT INTO users
-            (name, email, password, created_at)
-            VALUES (?, ?, ?, ?)
-            """,
-            (
-                request.form["name"],
-                request.form["email"],
-                generate_password_hash(request.form["password"]),
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            )
+    name = request.form.get("name", "").strip()
+
+    email = request.form.get("email", "").strip().lower()
+
+    password = request.form.get("password", "")
+
+    if not name or not email or not password:
+
+        flash("Please fill all fields.", "error")
+
+        return redirect("/signup")
+
+    conn = get_db_connection()
+
+    existing = conn.execute(
+
+        """
+        SELECT id
+
+        FROM users
+
+        WHERE email=?
+        """,
+
+        (
+            email,
         )
 
-        conn.commit()
+    ).fetchone()
+
+    if existing:
+
         conn.close()
 
-        return redirect("/login")
+        flash("Email already registered.", "error")
 
-    return render_template("signup.html")
+        return redirect("/signup")
 
+    conn.execute(
+
+        """
+        INSERT INTO users(
+
+            name,
+            email,
+            password,
+            created_at
+
+        )
+
+        VALUES(
+
+            ?,?,?,?
+
+        )
+        """,
+
+        (
+
+            name,
+            email,
+            generate_password_hash(password),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        )
+
+    )
+
+    conn.commit()
+
+    conn.close()
+
+    flash("Registration successful. Please login.", "success")
+
+    return redirect("/login")
+
+
+# ---------------------------------------------------
+# LOGIN
+# ---------------------------------------------------
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
-    if request.method == "POST":
+    if request.method == "GET":
 
-        conn = get_db_connection()
+        return render_template("login.html")
 
-        user = conn.execute(
-            "SELECT * FROM users WHERE email=?",
-            (request.form["email"],)
-        ).fetchone()
+    email = request.form.get("email", "").strip().lower()
 
-        conn.close()
+    password = request.form.get("password", "")
 
-        if user and check_password_hash(
-            user["password"],
-            request.form["password"]
-        ):
+    conn = get_db_connection()
 
-            session["user_id"] = user["id"]
-            session["user_name"] = user["name"]
+    user = conn.execute(
 
-            return redirect("/client-dashboard")
+        """
+        SELECT *
 
-    return render_template("login.html")
+        FROM users
 
+        WHERE email=?
+        """,
+
+        (
+            email,
+        )
+
+    ).fetchone()
+
+    conn.close()
+    # debug prints (optional)
+    # print("EMAIL ENTERED:", email)
+    # print("USER FOUND:", user is not None)
+    print("EMAIL ENTERED:", email)
+
+    print("USER FOUND:", user is not None)
+
+    if user:
+
+     print("DB EMAIL:", user["email"])
+
+     password_ok = check_password_hash(user["password"], password)
+
+     print("PASSWORD CHECK:", password_ok)
+
+    else:
+
+     password_ok = False
+
+
+    if user is None:
+
+     flash("User not found", "error")
+     return redirect("/login")
+
+
+    if not password_ok:
+
+     flash("Wrong password", "error")
+
+     return redirect("/login")
+
+    # Successful login: set session and redirect
+    session.clear()
+    session["user_id"] = user["id"]
+    session["user_name"] = user["name"]
+    session["user_email"] = user["email"]
+
+    flash(f"Welcome back, {user['name']}!", "success")
+    return redirect("/dashboard")
+
+
+
+
+# ---------------------------------------------------
+# LOGOUT
+# ---------------------------------------------------
 
 @auth_bp.route("/logout")
 def logout():

@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Live Chat{% endblock %}
+
+{% block content %}
+
+<section class="admin-chat-page">
+
+    <div class="chat-layout">
+
+        <aside class="chat-sidebar">
+
+            <div class="sidebar-header">
+
+                <h2>Client Conversations</h2>
+
+            </div>
+
+            <div
+                id="projectList"
+                class="project-list">
+
+                {% for project in projects %}
+
+                <div
+
+                    class="project-item"
+
+                    data-id="{{ project.id }}"
+
+                    data-name="{{ project.name }}">
+
+                    <div class="avatar">
+
+                        {{ project.name[:1]|upper }}
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <strong>
+
+                            {{ project.name }}
+
+                        </strong>
+
+                        <small>
+
+                            #{{ project.id }}
+
+                        </small>
+
+                    </div>
+
+                    {% if project.unread > 0 %}
+
+                    <span
+                        class="unread-badge">
+
+                        {{ project.unread }}
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </aside>
+
+        <section class="chat-panel">
+
+            <div
+                id="chatHeader"
+                class="chat-header">
+
+                Select a conversation
+
+            </div>
+
+            <div
+                id="chatMessages"
+                class="chat-messages">
+
+                <div class="empty-chat">
+
+                    Choose a client to start chatting.
+
+                </div>
+
+            </div>
+
+            <form
+                id="chatForm"
+                autocomplete="off">
+
+                <input
+
+                    id="messageInput"
+
+                    type="text"
+
+                    placeholder="Type message..."
+
+                    required>
+
+                <button
+                    type="submit">
+
+                    Send
+
+                </button>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</section>
+
+<script>
+
+let currentProject=null;
+
+const projectItems=document.querySelectorAll(".project-item");
+
+const chatMessages=document.getElementById("chatMessages");
+
+const chatHeader=document.getElementById("chatHeader");
+
+const form=document.getElementById("chatForm");
+
+const input=document.getElementById("messageInput");
+
+projectItems.forEach(item=>{
+
+    item.onclick=function(){
+
+        currentProject=this.dataset.id;
+
+        chatHeader.innerHTML=
+
+            this.dataset.name+
+
+            " <small>(#"+currentProject+")</small>";
+
+        loadMessages();
+
+    };
+
+});
+
+function loadMessages(){
+
+    if(!currentProject) return;
+
+    fetch("/admin/chat/"+currentProject)
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        chatMessages.innerHTML="";
+
+        data.forEach(msg=>{
+
+            chatMessages.innerHTML+=`
+
+            <div class="message ${msg.sender.toLowerCase()}">
+
+                <div class="bubble">
+
+                    <strong>${msg.sender}</strong>
+
+                    <p>${msg.message}</p>
+
+                    <small>${msg.created_at}</small>
+
+                </div>
+
+            </div>
+
+            `;
+
+        });
+
+        chatMessages.scrollTop=
+
+            chatMessages.scrollHeight;
+
+    });
+
+}
+
+form.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    if(!currentProject) return;
+
+    fetch(
+
+        "/admin/chat/send/"+currentProject,
+
+        {
+
+            method:"POST",
+
+            body:new URLSearchParams({
+
+                message:input.value
+
+            })
+
+        }
+
+    )
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(data.success){
+
+            input.value="";
+
+            loadMessages();
+
+        }
+
+    });
+
+});
+
+function updateUnread(){
+
+    fetch("/admin/unread-count")
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        document.title=
+
+            data.count>0
+
+            ? "(" + data.count + ") Admin Live Chat"
+
+            : "Admin Live Chat";
+
+    });
+
+}
+
+setInterval(function(){
+
+    loadMessages();
+
+    updateUnread();
+
+},2000);
+
+</script>
+
+{% endblock %}

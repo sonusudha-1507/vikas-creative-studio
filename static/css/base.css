@@ -597,3 +597,705 @@ transition:.4s;
 pointer-events:none;
 
 }
+/* ================================
+   VIKAS UI PATCH
+================================ */
+
+:root{
+
+--primary:#7c5cff;
+--secondary:#00d4ff;
+--dark:#0f1118;
+--card:#171b24;
+--border:rgba(255,255,255,.08);
+
+}
+
+body{
+
+font-family:Inter,Segoe UI,sans-serif;
+
+background:#0b0d15;
+
+color:white;
+
+}
+
+.site-header{
+
+backdrop-filter:blur(20px);
+
+background:rgba(10,10,15,.65);
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+position:sticky;
+
+top:0;
+
+z-index:999;
+
+}
+
+.nav{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:18px 8%;
+
+}
+
+.nav-links{
+
+display:flex;
+
+gap:28px;
+
+list-style:none;
+
+}
+
+.nav-links a{
+
+color:#ddd;
+
+text-decoration:none;
+
+font-weight:600;
+
+transition:.3s;
+
+}
+
+.nav-links a:hover{
+
+color:white;
+
+}
+
+.cta-btn{
+
+padding:13px 28px;
+
+border-radius:14px;
+
+background:linear-gradient(135deg,var(--primary),#5b45ff);
+
+color:white;
+
+font-weight:700;
+
+text-decoration:none;
+
+transition:.3s;
+
+box-shadow:0 12px 30px rgba(124,92,255,.35);
+
+}
+
+.cta-btn:hover{
+
+transform:translateY(-3px);
+
+}
+
+.nav-link-btn{
+
+padding:11px 24px;
+
+border-radius:12px;
+
+border:1px solid rgba(255,255,255,.15);
+
+text-decoration:none;
+
+color:white;
+
+}
+
+.primary-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:12px 24px;
+
+border:none;
+
+border-radius:14px;
+
+background:linear-gradient(135deg,#7c5cff,#00d4ff);
+
+color:white;
+
+cursor:pointer;
+
+font-weight:700;
+
+transition:.25s;
+
+}
+
+.primary-btn:hover{
+
+transform:translateY(-3px);
+
+}
+
+.secondary-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:12px 24px;
+
+border-radius:14px;
+
+text-decoration:none;
+
+background:#202531;
+
+color:white;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.panel{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border-radius:24px;
+
+padding:28px;
+
+border:1px solid rgba(255,255,255,.08);
+
+margin-bottom:28px;
+
+}
+
+.admin-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+.admin-table th{
+
+background:#171b24;
+
+padding:16px;
+
+}
+
+.admin-table td{
+
+padding:16px;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.admin-table tr:hover{
+
+background:rgba(255,255,255,.03);
+
+}
+
+input,
+textarea,
+select{
+
+background:#171b24;
+
+border:1px solid rgba(255,255,255,.08);
+
+color:white;
+
+padding:13px;
+
+border-radius:12px;
+
+width:100%;
+
+}
+
+.status{
+
+padding:8px 16px;
+
+border-radius:40px;
+
+font-size:13px;
+
+font-weight:700;
+
+}
+
+.status-completed{
+
+background:#18b65b;
+
+}
+
+.status-pending{
+
+background:#ff9800;
+
+}
+/* ================= CLIENT DASHBOARD FIX ================= */
+
+.dashboard-page{
+
+    min-height:100vh;
+
+    padding:120px 0 60px;
+
+}
+
+.dashboard-page .container{
+
+    width:min(1400px,94%);
+
+    margin:auto;
+
+}
+
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:30px;
+
+    margin-bottom:35px;
+
+    flex-wrap:wrap;
+
+}
+
+.dashboard-header h1{
+
+    font-size:3rem;
+
+    margin:0;
+
+    line-height:1.1;
+
+}
+
+.dashboard-header p{
+
+    color:#b8bfd1;
+
+    margin-top:10px;
+
+}
+
+.dashboard-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.dashboard-table{
+
+    background:rgba(18,22,33,.82);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+
+}
+
+.dashboard-table table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.dashboard-table thead{
+
+    background:#151a27;
+
+}
+
+.dashboard-table th{
+
+    padding:22px;
+
+    text-align:left;
+
+    font-size:15px;
+
+    letter-spacing:.5px;
+
+}
+
+.dashboard-table td{
+
+    padding:20px;
+
+    border-top:1px solid rgba(255,255,255,.06);
+
+    vertical-align:middle;
+
+}
+
+.dashboard-table tr:hover{
+
+    background:rgba(255,255,255,.03);
+
+}
+
+.primary-btn,
+.secondary-btn{
+
+    min-width:120px;
+
+    justify-content:center;
+
+}
+
+.progress-wrapper{
+
+    min-width:180px;
+
+}
+
+.progress-bar{
+
+    height:10px;
+
+    background:#262d40;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    margin-bottom:8px;
+
+}
+
+.progress-fill{
+
+    height:100%;
+
+    background:linear-gradient(90deg,#7c5cff,#00d4ff);
+
+    border-radius:20px;
+
+}
+
+.notification-menu{
+
+    width:360px;
+
+    right:0;
+
+    border-radius:18px;
+
+    background:#171b24;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+
+}
+
+.notification-item{
+
+    padding:16px;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.empty-state{
+
+    text-align:center;
+
+    padding:100px 30px;
+
+    background:rgba(20,20,30,.7);
+
+    border-radius:24px;
+
+}
+
+@media(max-width:1100px){
+
+.dashboard-table{
+
+overflow:auto;
+
+}
+
+.dashboard-table table{
+
+min-width:1100px;
+
+}
+
+}
+/*================ PAYMENT PAGE ================*/
+
+.payment-page{
+
+min-height:calc(100vh - 90px);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:60px 20px;
+
+}
+
+.payment-card{
+
+width:100%;
+
+/*================ THANK YOU PAGE ================*/
+
+.thankyou-page{
+
+min-height:calc(100vh - 90px);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:60px 20px;
+
+}
+
+.thankyou-card{
+
+width:100%;
+
+max-width:760px;
+
+background:rgba(18,22,33,.82);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:28px;
+
+padding:50px;
+
+backdrop-filter:blur(20px);
+
+box-shadow:0 25px 60px rgba(0,0,0,.35);
+
+text-align:center;
+
+}
+
+.success-circle{
+
+width:90px;
+
+height:90px;
+
+margin:auto;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#22c55e,#16a34a);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:42px;
+
+font-weight:bold;
+
+color:#fff;
+
+margin-bottom:24px;
+
+}
+
+.thankyou-card h1{
+
+font-size:3rem;
+
+margin-bottom:10px;
+
+}
+
+.thankyou-subtitle{
+
+font-size:18px;
+
+color:#b9c0d4;
+
+margin-bottom:35px;
+
+}
+
+.project-summary{
+
+margin:35px 0;
+
+background:#161b28;
+
+border-radius:18px;
+
+padding:25px;
+
+}
+
+.summary-row{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:14px 0;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.summary-row:last-child{
+
+border:none;
+
+}
+
+.summary-row span{
+
+color:#9ca6c2;
+
+}
+
+.summary-row strong{
+
+color:white;
+
+}
+
+.paid{
+
+color:#22c55e;
+
+}
+
+.timeline{
+
+margin:40px 0;
+
+text-align:left;
+
+}
+
+.timeline-item{
+
+display:flex;
+
+gap:18px;
+
+margin-bottom:22px;
+
+}
+
+.timeline-dot{
+
+width:16px;
+
+height:16px;
+
+border-radius:50%;
+
+background:#7c5cff;
+
+margin-top:7px;
+
+flex-shrink:0;
+
+}
+
+.timeline-content h4{
+
+margin:0;
+
+font-size:18px;
+
+}
+
+.timeline-content p{
+
+margin-top:5px;
+
+color:#aeb7ce;
+
+}
+<div class="thankyou-actions">
+
+    <a href="/" class="primary-btn">
+        Back to Home
+    </a>
+
+    <a href="/admin" class="secondary-btn">
+        Admin Dashboard
+    </a>
+
+</div>
+.thankyou-actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+    margin-top:35px;
+
+    flex-wrap:wrap;
+
+}
+
+.thankyou-actions a{
+
+    min-width:220px;
+
+}

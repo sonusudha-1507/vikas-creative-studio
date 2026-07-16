@@ -1,114 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}VIKAS — Creative Editing Studio{% endblock %}</title>
 
-    <!-- Base CSS (we’ll add files later) -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cinematic.css') }}">
+    <meta charset="UTF-8">
 
-    {% block head %}{% endblock %}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+        {% block title %}
+
+        VIKAS Creative Studio
+
+        {% endblock %}
+
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/cinematic.css') }}">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    {% block head %}
+
+    {% endblock %}
+
 </head>
+
 <body>
-    <!-- Cinematic Background -->
-    <div class="cinematic-bg">
+
+<div class="cinematic-bg">
+
     <div class="gradient-orb orb-one"></div>
+
     <div class="gradient-orb orb-two"></div>
-    </div>
 
-    <!-- Custom Cursor -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+</div>
 
-    <!-- Navigation -->
-    <header class="site-header">
-        <nav class="nav">
-            <div class="logo">VIKAS</div>
+<div class="cursor-dot"></div>
 
-            <ul class="nav-links">
-                <li><a href="/">Work</a></li>
-                <li><a href="/services">Services</a></li>
-                <li><a href="#">Pricing</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+<div class="cursor-outline"></div>
 
-            <a href="/start-project" class="cta-btn">Start a Project</a>
+<header class="site-header">
+
+    <nav class="nav">
+
+        <a
+            href="/"
+            class="logo">
+
+            VIKAS
+
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+
+                <a href="/">
+
+                    Home
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="/services">
+
+                    Services
+
+                </a>
+
+            </li>
+            <li>
+                {% if session.get("user_id") %}
+                <a href="/dashboard">
+                    Track Project
+                </a>
+                {% else %}
+                <a href="/login">
+                    Track Project
+                </a>
+                {% endif %}
+            </li>
+
             {% if session.get("user_id") %}
 
+            <li>
 
-<a href="/client-dashboard">
+                <a href="/dashboard">
 
-Dashboard
+                    Dashboard
 
-</a>
+                </a>
 
+            </li>
 
-<a href="/logout">
+            <li>
 
-Logout
+                <a href="/profile">
 
-</a>
+                    Profile
 
+                </a>
 
+            </li>
 
-{% else %}
+            {% endif %}
 
+        </ul>
 
-<a href="/login">
+        <div class="nav-right">
 
-Login
+            {% if session.get("user_id") %}
 
-</a>
+                <a
+                    href="/start-project"
+                    class="cta-btn">
 
+                    New Project
 
-<a 
-href="/signup"
-class="cta-btn magnetic">
+                </a>
 
-Sign Up
+                <a
+                    href="/logout"
+                    class="nav-link-btn">
 
-</a>
+                    Logout
 
+                </a>
 
-{% endif %} 
-        </nav>
-    </header>
+            {% else %}
 
-    <!-- Page Content -->
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+                <a
+                    href="/login"
+                    class="nav-link-btn">
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <p>© {{ year }} VIKAS Creative Editing Studio</p>
-    </footer>
-    <!-- GSAP -->
-    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+                    Login
 
-    <!-- Global JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/cinematic.js') }}"></script>
-    {% block scripts %}{% endblock %}
-<!-- Smooth scroll (Lenis) -->
+                </a>
+
+                <a
+                    href="/signup"
+                    class="cta-btn">
+
+                    Register
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+</header>
+
+<main>
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+<footer class="site-footer">
+
+    <div class="footer-content">
+
+        <p>
+
+            © {{ year if year else 2026 }}
+            VIKAS Creative Studio.
+            All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
-<script>
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => 1 - Math.pow(1 - t, 3),
-  smoothWheel: true
-})
 
-function raf(time) {
-  lenis.raf(time)
-  requestAnimationFrame(raf)
+<script>
+
+const lenis = new Lenis({
+
+    duration:1.2,
+
+    smoothWheel:true
+
+});
+
+function raf(time){
+
+    lenis.raf(time);
+
+    requestAnimationFrame(raf);
+
 }
 
-requestAnimationFrame(raf)
+requestAnimationFrame(raf);
+
 </script>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/cinematic.js') }}"></script>
+
+{% block scripts %}
+
+{% endblock %}
+
 </body>
+
 </html>
