@@ -75,12 +75,47 @@ def admin_dashboard():
     )
     conn.close()
 
+    if config.BREVO_API_KEY:
+        email_provider = "Brevo HTTPS API (Active)"
+    elif config.RESEND_API_KEY:
+        email_provider = "Resend HTTPS API (Active)"
+    elif config.SMTP_USER and config.SMTP_PASSWORD:
+        email_provider = f"SMTP ({config.SMTP_HOST}:{config.SMTP_PORT})"
+    else:
+        email_provider = "Not Configured"
+
     return render_template(
         "admin.html",
         projects=projects,
         clients=clients,
         total_revenue=total_revenue,
+        email_provider=email_provider,
     )
+
+
+@admin_bp.route("/admin/test-email", methods=["POST"])
+def admin_test_email():
+    if not session.get("admin_logged_in"):
+        return redirect("/admin-login")
+
+    if not config.OWNER_EMAIL:
+        flash("OWNER_EMAIL is not set in environment variables.", "error")
+        return redirect("/admin")
+
+    ok, info = config.send_email_sync(
+        config.OWNER_EMAIL,
+        f"Test Email — {config.STUDIO_NAME}",
+        f"""
+        <div style="font-family:Inter,Arial,sans-serif;padding:24px;background:#0b0d15;color:#eef2ff;border-radius:12px;">
+            <h2 style="margin-top:0;color:#22c55e;">Owner Email Alerts Are Working!</h2>
+            <p>Your <strong>{config.STUDIO_NAME}</strong> website successfully sent this test email to <strong>{config.OWNER_EMAIL}</strong>.</p>
+        </div>
+        """,
+        f"Test email from {config.STUDIO_NAME} succeeded!",
+    )
+
+    flash(info, "success" if ok else "error")
+    return redirect("/admin")
 
 
 @admin_bp.route("/project/<int:project_id>/status", methods=["POST"])

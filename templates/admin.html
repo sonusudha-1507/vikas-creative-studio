@@ -267,7 +267,11 @@
                     </div>
                     <div class="setting-card">
                         <h3>Owner Email Alerts</h3>
-                        <p>Configured recipient: <strong>{{ OWNER_EMAIL }}</strong></p>
+                        <p>Recipient: <strong>{{ OWNER_EMAIL }}</strong></p>
+                        <p>Provider: <strong>{{ email_provider }}</strong></p>
+                        <form action="/admin/test-email" method="POST" style="margin-top:0.9rem;">
+                            <button type="submit" class="primary-btn btn-sm">Send Test Email</button>
+                        </form>
                     </div>
                     <div class="setting-card">
                         <h3>Storage</h3>
