@@ -21,7 +21,7 @@
                 Start a Project <i class="fa-solid fa-arrow-right"></i>
             </a>
             <a href="#portfolio" class="secondary-btn">
-                Explore Work
+                <i class="fa-solid fa-play"></i> Watch Showreel
             </a>
         </div>
 
@@ -41,38 +41,57 @@
     </div>
 </section>
 
+<!-- Portfolio Showcase with Click-to-Watch Lightbox -->
 <section class="portfolio-showcase" id="portfolio">
     <div class="section-header centered">
         <span class="section-tag">SELECTED WORK</span>
         <h2>Crafted Visual Experiences</h2>
-        <p>Hover any reel to preview our pacing, transitions, and color grading.</p>
+        <p>Hover to preview, or click any card to watch full-screen with sound.</p>
     </div>
 
     <div class="showcase-grid">
-        <div class="showcase-card">
+        <div
+            class="showcase-card"
+            data-video="{{ url_for('static', filename='videos/vedit8.mp4') }}"
+            data-title="Cinematic Story Cut"
+            data-tag="VIDEO EDIT • 4K COLOR GRADE"
+            data-service="Video Editing">
             <video muted loop playsinline preload="metadata">
                 <source src="{{ url_for('static', filename='videos/vedit8.mp4') }}" type="video/mp4">
             </video>
+            <span class="play-pill"><i class="fa-solid fa-play"></i> Watch</span>
             <div class="showcase-info">
                 <span>VIDEO EDIT</span>
                 <h3>Cinematic Story Cut</h3>
             </div>
         </div>
 
-        <div class="showcase-card">
+        <div
+            class="showcase-card"
+            data-video="{{ url_for('static', filename='videos/vedit9.mp4') }}"
+            data-title="Viral Reel Edit"
+            data-tag="SHORT FORM • SOUND & CAPTIONS"
+            data-service="Instagram Reels">
             <video muted loop playsinline preload="metadata">
                 <source src="{{ url_for('static', filename='videos/vedit9.mp4') }}" type="video/mp4">
             </video>
+            <span class="play-pill"><i class="fa-solid fa-play"></i> Watch</span>
             <div class="showcase-info">
                 <span>SHORT FORM</span>
                 <h3>Viral Reel Edit</h3>
             </div>
         </div>
 
-        <div class="showcase-card">
+        <div
+            class="showcase-card"
+            data-video="{{ url_for('static', filename='videos/vedit10.mp4') }}"
+            data-title="Brand Visual Edit"
+            data-tag="SOCIAL CONTENT • MOTION & PACING"
+            data-service="Video Editing">
             <video muted loop playsinline preload="metadata">
                 <source src="{{ url_for('static', filename='videos/vedit10.mp4') }}" type="video/mp4">
             </video>
+            <span class="play-pill"><i class="fa-solid fa-play"></i> Watch</span>
             <div class="showcase-info">
                 <span>SOCIAL CONTENT</span>
                 <h3>Brand Visual Edit</h3>
@@ -81,6 +100,76 @@
     </div>
 </section>
 
+<!-- Interactive Before / After Color Grade Comparison -->
+<section class="compare-section">
+    <div class="section-header centered">
+        <span class="section-tag">COLOR GRADING & POLISH</span>
+        <h2>See the Studio Transformation</h2>
+        <p>Drag the slider left or right to compare flat raw footage against our VIKAS Cinema Grade.</p>
+    </div>
+
+    <div class="compare-wrapper" id="compareBox" style="--pos: 50%;">
+        <video class="compare-video compare-after" autoplay muted loop playsinline>
+            <source src="{{ url_for('static', filename='videos/vedit8.mp4') }}" type="video/mp4">
+        </video>
+
+        <div class="compare-before-layer" id="compareBeforeLayer">
+            <video class="compare-video compare-before" autoplay muted loop playsinline>
+                <source src="{{ url_for('static', filename='videos/vedit8.mp4') }}" type="video/mp4">
+            </video>
+        </div>
+
+        <span class="compare-badge left">RAW / UNGRADED</span>
+        <span class="compare-badge right">VIKAS CINEMA GRADE</span>
+
+        <div class="compare-divider" id="compareDivider">
+            <div class="compare-handle"><i class="fa-solid fa-arrows-left-right"></i></div>
+        </div>
+
+        <input
+            type="range"
+            min="5"
+            max="95"
+            value="50"
+            class="compare-range"
+            id="compareRange"
+            aria-label="Compare raw footage and graded footage">
+    </div>
+</section>
+
+<!-- 4-Step Studio Workflow -->
+<section class="process-section">
+    <div class="section-header centered">
+        <span class="section-tag">HOW IT WORKS</span>
+        <h2>From Raw Files to Final Cut in 4 Steps</h2>
+        <p>A streamlined client portal built so you never have to chase updates.</p>
+    </div>
+
+    <div class="process-grid">
+        <div class="process-card">
+            <span class="step-num">01</span>
+            <h3>Brief & Upload</h3>
+            <p>Choose your service package, share your creative direction, and upload raw assets or Drive links.</p>
+        </div>
+        <div class="process-card">
+            <span class="step-num">02</span>
+            <h3>Instant Confirmation</h3>
+            <p>Complete secure checkout and receive instant order confirmation + live tracking access.</p>
+        </div>
+        <div class="process-card">
+            <span class="step-num">03</span>
+            <h3>Edit & Live Chat</h3>
+            <p>Our editors craft your cut, color grade, and SFX while chatting directly with you in your portal.</p>
+        </div>
+        <div class="process-card">
+            <span class="step-num">04</span>
+            <h3>4K Delivery</h3>
+            <p>Download your final master straight from your dashboard, with revision rounds included.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services & Pricing -->
 <section class="services">
     <div class="section-header centered">
         <span class="section-tag">PACKAGES & PRICING</span>
@@ -143,6 +232,42 @@
     </div>
 </section>
 
+<!-- Client Testimonials -->
+<section class="testimonials-section">
+    <div class="section-header centered">
+        <span class="section-tag">CREATOR FEEDBACK</span>
+        <h2>Trusted by Creators & Growing Brands</h2>
+    </div>
+
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"The pacing and sound design doubled my average view duration on YouTube. Best editing workflow I've used."</p>
+            <div class="testimonial-author">
+                <strong>Rohan Verma</strong>
+                <small>Tech YouTuber • 180K Subscribers</small>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"Uploaded raw product clips at night and had a super clean color-graded Reel ready in 24 hours."</p>
+            <div class="testimonial-author">
+                <strong>Ananya Kapoor</strong>
+                <small>D2C Lifestyle Brand</small>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"Live chat inside the dashboard made revisions effortless. No messy WhatsApp threads or lost files."</p>
+            <div class="testimonial-author">
+                <strong>Kabir Mehta</strong>
+                <small>Podcast & Short-Form Creator</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About & Trust -->
 <section class="about">
     <div class="about-grid">
         <div class="about-content">
@@ -182,6 +307,57 @@
     </div>
 </section>
 
+<!-- FAQ Accordion -->
+<section class="faq-section">
+    <div class="section-header centered">
+        <span class="section-tag">FREQUENT QUESTIONS</span>
+        <h2>Everything You Need to Know</h2>
+    </div>
+
+    <div class="faq-list">
+        <div class="faq-item">
+            <button type="button" class="faq-question">
+                <span>What if my raw footage is larger than 200MB?</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="faq-answer">
+                <p>You can upload files up to 200MB directly on the Start Project page. For large 4K camera footage, simply paste a Google Drive, Dropbox, or Frame.io link inside your project brief.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button type="button" class="faq-question">
+                <span>How do revisions and live feedback work?</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="faq-answer">
+                <p>Every package includes dedicated revision rounds. You can message our editors anytime through the built-in Project Chat in your dashboard.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button type="button" class="faq-question">
+                <span>How fast will I receive my finished project?</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="faq-answer">
+                <p>Turnaround ranges from 12 hours (Express Thumbnails & Premium Reels) up to 2–4 days for long-form YouTube videos, with real-time progress updates along the way.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button type="button" class="faq-question">
+                <span>Are my raw videos and photos kept private?</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="faq-answer">
+                <p>Yes—100% confidential. Only you and your assigned studio editor can access your uploaded assets and final downloads.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
 <section class="contact-cta">
     <div class="contact-box">
         <h2>Ready to Elevate Your Content?</h2>
@@ -195,4 +371,20 @@
         </div>
     </div>
 </section>
+
+<!-- Portfolio Lightbox Modal -->
+<div class="video-lightbox" id="videoLightbox" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-dialog">
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close video">&times;</button>
+        <video id="lightboxVideo" controls playsinline></video>
+        <div class="lightbox-footer">
+            <div>
+                <span class="section-tag" id="lightboxTag"></span>
+                <h3 id="lightboxTitle"></h3>
+            </div>
+            <a href="/start-project" id="lightboxOrderBtn" class="cta-btn">Order Similar Edit →</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -79,12 +79,24 @@
             </div>
 
             <div class="panel">
-                <div class="panel-header">
+                <div class="panel-header admin-filter-bar">
                     <h2>Recent Projects</h2>
+                    <div class="admin-filter-controls">
+                        <input
+                            type="text"
+                            id="projectSearch"
+                            placeholder="Search client, email, service or #ID...">
+                        <div class="filter-pills">
+                            <button type="button" class="filter-pill active" data-filter="all">All</button>
+                            <button type="button" class="filter-pill" data-filter="paid">Paid</button>
+                            <button type="button" class="filter-pill" data-filter="pending">Pending</button>
+                            <button type="button" class="filter-pill" data-filter="delivered">Delivered</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="table-wrapper">
-                    <table class="admin-table">
+                    <table class="admin-table" id="recentProjectsTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -99,7 +111,10 @@
                         </thead>
                         <tbody>
                         {% for project in projects %}
-                            <tr>
+                            <tr
+                                data-payment="{{ project.payment_status|lower }}"
+                                data-status="{{ project.status|lower }}"
+                                data-search="#{{ project.id }} {{ project.name|lower }} {{ project.email|lower }} {{ project.service_name|lower }} {{ project.package_name|lower }}">
                                 <td>#{{ project.id }}</td>
                                 <td>
                                     <strong>{{ project.name }}</strong><br>
@@ -301,5 +316,42 @@ const refreshBtn = document.getElementById("refreshBtn");
 if (refreshBtn) {
     refreshBtn.addEventListener("click", () => location.reload());
 }
+
+// Live Admin Search & Status Filter
+const searchInput = document.getElementById("projectSearch");
+const filterPills = document.querySelectorAll(".filter-pill");
+const tableRows = document.querySelectorAll("#recentProjectsTable tbody tr");
+let activeFilter = "all";
+
+function applyAdminFilters() {
+    const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
+    tableRows.forEach(row => {
+        const pay = row.dataset.payment || "";
+        const st = row.dataset.status || "";
+        const text = row.dataset.search || "";
+
+        const matchesFilter =
+            activeFilter === "all" ||
+            (activeFilter === "paid" && pay === "paid") ||
+            (activeFilter === "pending" && pay !== "paid") ||
+            (activeFilter === "delivered" && st === "delivered");
+
+        const matchesSearch = !query || text.includes(query);
+        row.style.display = matchesFilter && matchesSearch ? "" : "none";
+    });
+}
+
+if (searchInput) {
+    searchInput.addEventListener("input", applyAdminFilters);
+}
+
+filterPills.forEach(pill => {
+    pill.addEventListener("click", () => {
+        filterPills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        activeFilter = pill.dataset.filter;
+        applyAdminFilters();
+    });
+});
 </script>
 {% endblock %}

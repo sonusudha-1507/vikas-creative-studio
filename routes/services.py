@@ -326,3 +326,61 @@ def track_project():
         projects=projects,
         searched_email=searched_email,
     )
+
+
+@services_bp.route("/terms")
+def terms_page():
+    return render_template(
+        "legal.html",
+        page_title="Terms & Conditions",
+        page_body=f"""
+        <p>Welcome to <strong>{config.STUDIO_NAME}</strong>. By placing an order on this website, you agree to provide accurate project briefs and rights-cleared raw media files.</p>
+        <p><strong>Deliverables & Turnaround:</strong> Estimated delivery timelines (12 hours to 4 days depending on the selected package) begin after payment confirmation and receipt of all required raw files.</p>
+        <p><strong>Revisions:</strong> Each package includes the stated number of revision rounds covering reasonable creative adjustments within the original project scope.</p>
+        <p><strong>Payments:</strong> All payments are processed securely in INR via Razorpay.</p>
+        """,
+    )
+
+
+@services_bp.route("/privacy")
+def privacy_page():
+    return render_template(
+        "legal.html",
+        page_title="Privacy Policy",
+        page_body=f"""
+        <p><strong>{config.STUDIO_NAME}</strong> respects your privacy and confidentiality.</p>
+        <p><strong>Information Collected:</strong> We collect your name, email address, project brief, and uploaded creative assets solely to fulfill your editing order and communicate progress updates.</p>
+        <p><strong>Payment Security:</strong> Card, UPI, and banking credentials are handled directly by Razorpay and are never stored on our servers.</p>
+        <p><strong>Confidentiality:</strong> Client footage, photos, and project files are never shared publicly or with third parties without explicit permission.</p>
+        """,
+    )
+
+
+@services_bp.route("/refund-policy")
+def refund_page():
+    email = config.OWNER_EMAIL or "contact@vikasstudio.com"
+    return render_template(
+        "legal.html",
+        page_title="Cancellation & Refund Policy",
+        page_body=f"""
+        <p><strong>Before Editing Starts:</strong> If you cancel an order before our studio begins reviewing or editing your files (typically within 6 hours of payment), you are eligible for a full refund.</p>
+        <p><strong>Once Work Has Started:</strong> Because creative editing is a custom service, orders already in <em>Editing</em> or <em>Delivered</em> status are non-refundable, though we will fulfill all included revisions to ensure quality.</p>
+        <p><strong>Refund Processing Time:</strong> Approved refunds are initiated within 2 business days and credited to your original payment method within 5–7 business days via Razorpay.</p>
+        <p>For refund requests, email <a href="mailto:{email}" style="color:#00d4ff;">{email}</a> with your Project ID.</p>
+        """,
+    )
+
+
+@services_bp.route("/contact")
+def contact_page():
+    email = config.OWNER_EMAIL or "contact@vikasstudio.com"
+    return render_template(
+        "legal.html",
+        page_title="Contact & About Us",
+        page_body=f"""
+        <p><strong>{config.STUDIO_NAME}</strong> is an India-based creative post-production studio specializing in Video Editing, Photo Retouching, Instagram Reels, and YouTube Thumbnail Design.</p>
+        <p><strong>Support Email:</strong> <a href="mailto:{email}" style="color:#00d4ff;">{email}</a></p>
+        <p><strong>Business Hours:</strong> Monday – Saturday, 10:00 AM – 7:00 PM IST</p>
+        <p><strong>Order Tracking:</strong> Existing clients can track real-time order progress via their <a href="/dashboard" style="color:#00d4ff;">Dashboard</a> or <a href="/track-project" style="color:#00d4ff;">Track Order</a> page.</p>
+        """,
+    )

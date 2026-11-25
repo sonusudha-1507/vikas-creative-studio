@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} — {{ STUDIO_NAME }}{% endblock %}
+
+{% block content %}
+<section class="project-form">
+    <div class="form-box wide">
+        <span class="section-tag">STUDIO POLICY & INFO</span>
+        <h2>{{ page_title }}</h2>
+        <p class="text-muted">Last updated: {{ year }}</p>
+        <div class="summary-divider"></div>
+        <div style="display:flex;flex-direction:column;gap:1.1rem;color:#cbd5e1;line-height:1.75;">
+            {{ page_body|safe }}
+        </div>
+    </div>
+</section>
+{% endblock %}

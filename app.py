@@ -27,13 +27,11 @@ app.config["UPLOAD_FOLDER"] = config.UPLOAD_FOLDER
 app.config["DELIVERY_FOLDER"] = config.DELIVERY_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
 
-# Ensure folders & database exist on startup (works under gunicorn and python app.py)
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 os.makedirs(app.config["DELIVERY_FOLDER"], exist_ok=True)
 os.makedirs(os.path.dirname(config.DATABASE) or "database", exist_ok=True)
 init_database()
 
-# Register Blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
@@ -42,9 +40,10 @@ app.register_blueprint(services_bp)
 app.register_blueprint(payment_bp)
 
 
-# -----------------------------
-# Delivery & File Downloads
-# -----------------------------
+@app.route("/health")
+def health():
+    return "OK", 200
+
 
 @app.route("/deliver/<int:project_id>", methods=["POST"])
 def deliver_project(project_id):
@@ -177,10 +176,6 @@ def download_upload(filename):
         as_attachment=True,
     )
 
-
-# -----------------------------
-# Template Globals
-# -----------------------------
 
 @app.context_processor
 def inject_keys():
