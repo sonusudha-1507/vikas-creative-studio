@@ -3,52 +3,51 @@
 
 {% block content %}
 <section class="service-detail">
-
-    <h1>Professional Photo Editing</h1>
-    <p class="service-desc">
-        Cinematic color grading, retouching, skin correction, lighting balance,
-        and high-end visual enhancement.
-    </p>
+    <div class="section-header centered">
+        <span class="section-tag">PHOTO RETOUCHING</span>
+        <h1>Professional Photo Editing</h1>
+        <p class="service-desc">
+            Cinematic color grading, retouching, skin correction, lighting balance, and high-end visual enhancement.
+        </p>
+    </div>
 
     <div class="package-grid">
-
         <div class="package-card">
             <h3>Basic</h3>
-            <p class="price">₹499</p>
+            <div class="package-price">₹499</div>
             <ul>
-                <li>Basic retouch</li>
-                <li>Color correction</li>
-                <li>1 revision</li>
-                <li>3 day delivery</li>
+                <li><i class="fa-solid fa-check"></i> Basic retouch</li>
+                <li><i class="fa-solid fa-check"></i> Color correction</li>
+                <li><i class="fa-solid fa-check"></i> 1 revision</li>
+                <li><i class="fa-solid fa-check"></i> 3 day delivery</li>
             </ul>
-            <a href="/start-project?service=Photo Editing&package=Basic&price=499" class="cta-btn magnetic">Continue</a>
+            <a href="/start-project?service=Photo%20Editing&package=Basic&price=499" class="cta-btn full-width">Continue</a>
         </div>
 
-        <div class="package-card highlight">
+        <div class="package-card featured">
+            <div class="popular-badge">RECOMMENDED</div>
             <h3>Standard</h3>
-            <p class="price">₹999</p>
+            <div class="package-price">₹999</div>
             <ul>
-                <li>Advanced retouch</li>
-                <li>Skin smoothing</li>
-                <li>2 revisions</li>
-                <li>2 day delivery</li>
+                <li><i class="fa-solid fa-check"></i> Advanced retouch</li>
+                <li><i class="fa-solid fa-check"></i> Skin smoothing</li>
+                <li><i class="fa-solid fa-check"></i> 2 revisions</li>
+                <li><i class="fa-solid fa-check"></i> 2 day delivery</li>
             </ul>
-            <a href="/start-project?service=Photo Editing&package=Standard&price=999" class="cta-btn magnetic">Continue</a>
+            <a href="/start-project?service=Photo%20Editing&package=Standard&price=999" class="cta-btn full-width">Continue</a>
         </div>
 
         <div class="package-card">
             <h3>Premium</h3>
-            <p class="price">₹1999</p>
+            <div class="package-price">₹1999</div>
             <ul>
-                <li>Full cinematic edit</li>
-                <li>Lighting enhancement</li>
-                <li>Unlimited revisions</li>
-                <li>1 day delivery</li>
+                <li><i class="fa-solid fa-check"></i> Full cinematic edit</li>
+                <li><i class="fa-solid fa-check"></i> Lighting enhancement</li>
+                <li><i class="fa-solid fa-check"></i> Unlimited revisions</li>
+                <li><i class="fa-solid fa-check"></i> 1 day delivery</li>
             </ul>
-            <a href="/start-project" class="cta-btn magnetic">Continue</a>
+            <a href="/start-project?service=Photo%20Editing&package=Premium&price=1999" class="cta-btn full-width">Continue</a>
         </div>
-
     </div>
-
 </section>
 {% endblock %}

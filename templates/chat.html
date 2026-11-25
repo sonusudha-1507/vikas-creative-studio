@@ -1,196 +1,91 @@
 {% extends "base.html" %}
 
-{% block title %}Project Chat{% endblock %}
+{% block title %}Project Chat #{{ project.id }} — VIKAS{% endblock %}
 
 {% block content %}
-
 <section class="chat-page">
-
     <div class="chat-container">
-
         <div class="chat-header">
-
             <div>
-
-                <h2>{{ project.service_name }}</h2>
-
-                <p>
-
-                    Project #{{ project.id }}
-
-                </p>
-
+                <h2>{{ project.service_name }} — {{ project.package_name }}</h2>
+                <p>Project #{{ project.id }}</p>
             </div>
-
-            <div>
-
-                <span class="status status-{{ project.status|lower }}">
-
-                    {{ project.status }}
-
-                </span>
-
+            <div class="chat-header-actions">
+                <span class="status-badge">{{ project.status }}</span>
+                <a href="/dashboard" class="secondary-btn">Back</a>
             </div>
-
         </div>
 
-        <div
-            id="messages"
-            class="messages">
-
+        <div id="messages" class="messages">
             {% for msg in messages %}
-
             <div class="message {{ msg.sender|lower }}">
-
                 <div class="bubble">
-
-                    <strong>
-
-                        {{ msg.sender }}
-
-                    </strong>
-
-                    <p>
-
-                        {{ msg.message }}
-
-                    </p>
-
-                    <small>
-
-                        {{ msg.created_at }}
-
-                    </small>
-
+                    <strong>{{ msg.sender }}</strong>
+                    <p>{{ msg.message }}</p>
+                    <small>{{ msg.created_at }}</small>
                 </div>
-
             </div>
-
             {% endfor %}
-
         </div>
 
-        <form
-            id="chatForm">
-
-            <input
-                id="messageInput"
-                type="text"
-                placeholder="Type your message..."
-                autocomplete="off"
-                required>
-
-            <button
-                type="submit">
-
-                Send
-
-            </button>
-
+        <form id="chatForm" class="chat-form" autocomplete="off">
+            <input id="messageInput" type="text" placeholder="Type your message to the studio..." required>
+            <button type="submit" class="cta-btn">Send</button>
         </form>
-
     </div>
-
 </section>
 
 <script>
+const form = document.getElementById("chatForm");
+const input = document.getElementById("messageInput");
+const container = document.getElementById("messages");
 
-const form=document.getElementById("chatForm");
-
-const input=document.getElementById("messageInput");
-
-const container=document.getElementById("messages");
-
-function scrollBottom(){
-
-    container.scrollTop=container.scrollHeight;
-
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    }[c]));
 }
 
+function scrollBottom() {
+    container.scrollTop = container.scrollHeight;
+}
 scrollBottom();
 
-form.addEventListener("submit",function(e){
-
+form.addEventListener("submit", function (e) {
     e.preventDefault();
+    if (!input.value.trim()) return;
 
-    fetch(
-
-        "/chat/send/{{ project.id }}",
-
-        {
-
-            method:"POST",
-
-            body:new URLSearchParams({
-
-                message:input.value
-
-            })
-
-        }
-
-    )
-
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        if(data.success){
-
-            input.value="";
-
+    fetch("/chat/send/{{ project.id }}", {
+        method: "POST",
+        body: new URLSearchParams({ message: input.value })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            input.value = "";
             loadMessages();
-
         }
-
     });
-
 });
 
-function loadMessages(){
-
-    fetch(
-
-        "/chat/messages/{{ project.id }}"
-
-    )
-
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        container.innerHTML="";
-
-        data.forEach(function(msg){
-
-            container.innerHTML+=`
-
-            <div class="message ${msg.sender.toLowerCase()}">
-
-                <div class="bubble">
-
-                    <strong>${msg.sender}</strong>
-
-                    <p>${msg.message}</p>
-
-                    <small>${msg.created_at}</small>
-
+function loadMessages() {
+    fetch("/chat/messages/{{ project.id }}")
+        .then(r => r.json())
+        .then(data => {
+            container.innerHTML = data.map(msg => `
+                <div class="message ${escapeHtml(msg.sender.toLowerCase())}">
+                    <div class="bubble">
+                        <strong>${escapeHtml(msg.sender)}</strong>
+                        <p>${escapeHtml(msg.message)}</p>
+                        <small>${escapeHtml(msg.created_at)}</small>
+                    </div>
                 </div>
-
-            </div>
-
-            `;
-
-        });
-
-        scrollBottom();
-
-    });
-
+            `).join("");
+            scrollBottom();
+        })
+        .catch(() => {});
 }
 
-setInterval(loadMessages,2000);
-
+setInterval(loadMessages, 2500);
 </script>
-
 {% endblock %}

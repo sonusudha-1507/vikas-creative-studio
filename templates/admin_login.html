@@ -3,12 +3,14 @@
 {% block title %}Admin Login — VIKAS{% endblock %}
 
 {% block content %}
-<section class="project-form">
-    <div class="form-box">
-        <h2>Admin Login</h2>
+<section class="auth-page">
+    <div class="auth-box">
+        <span class="section-tag">STUDIO CONTROL</span>
+        <h1>Admin Login</h1>
+        <p>Sign in to manage orders, client files, deliveries, and chat.</p>
 
         {% if error %}
-        <p style="color:#ff6b6b;">Invalid credentials</p>
+            <div class="alert-box">{{ error }}</div>
         {% endif %}
 
         <form method="POST">
@@ -22,7 +24,7 @@
                 <input type="password" name="password" required>
             </div>
 
-            <button type="submit" class="cta-btn">Login</button>
+            <button type="submit" class="cta-btn full-width">Sign In</button>
         </form>
     </div>
 </section>

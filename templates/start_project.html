@@ -1,67 +1,194 @@
 {% extends "base.html" %}
 
-{% block title %}Start a Project — VIKAS{% endblock %}
+{% block title %}Start a Project — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
 <section class="project-form">
-    <div class="form-box">
-        <h2>Start a Project</h2>
-        <p>
-            Share a few details about your project.
-            You’ll receive a confirmation and next steps via email.
-        </p>
+    <div class="start-project-layout">
+        <div class="form-box wide">
+            <span class="section-tag">NEW ORDER</span>
+            <h2>Start Your Project</h2>
+            <p>Choose your service & package, describe your vision, and proceed to secure Razorpay checkout.</p>
 
-        <form method="POST" enctype="multipart/form-data">
-            <input 
-type="hidden"
-name="service"
-value="{{service}}">
+            <form method="POST" enctype="multipart/form-data" id="startProjectForm">
+                <input type="hidden" name="service" id="selectedServiceInput" value="{{ service }}">
+                <input type="hidden" name="package" id="selectedPackageInput" value="{{ package }}">
+                <input type="hidden" name="price" id="selectedPriceInput" value="{{ price }}">
 
+                <div class="form-group">
+                    <label>1. Choose Service</label>
+                    <div class="selector-grid" id="serviceSelector">
+                        {% for slug, svc in services.items() %}
+                        <button
+                            type="button"
+                            class="select-pill {% if svc.title == service %}active{% endif %}"
+                            data-service="{{ svc.title }}"
+                            data-slug="{{ slug }}">
+                            <strong>{{ svc.title }}</strong>
+                            <small>From ₹{{ svc.starting_price }}</small>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
 
-<input
-type="hidden"
-name="package"
-value="{{package}}">
+                <div class="form-group">
+                    <label>2. Select Package Tier</label>
+                    <div class="selector-grid cols-3" id="packageSelector">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+                </div>
 
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ session.get('user_name', '') }}"
+                            placeholder="Your full name"
+                            required>
+                    </div>
 
-<input
-type="hidden"
-name="price"
-value="{{price}}">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="name" required>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ session.get('user_email', '') }}"
+                            placeholder="you@example.com"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Project Category / Style</label>
+                    <select name="project_type" id="projectTypeSelect" required>
+                        <option value="Video Editing" {% if service == 'Video Editing' %}selected{% endif %}>Video Editing</option>
+                        <option value="Photo Editing" {% if service == 'Photo Editing' %}selected{% endif %}>Photo Retouching</option>
+                        <option value="Instagram Reels" {% if service == 'Instagram Reels' %}selected{% endif %}>Reels / Shorts</option>
+                        <option value="Thumbnail Design" {% if service == 'Thumbnail Design' %}selected{% endif %}>Thumbnail / Poster</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Project Brief & Instructions</label>
+                    <textarea
+                        name="description"
+                        rows="5"
+                        placeholder="Describe your vision, pacing, reference links (Google Drive/Dropbox if files >200MB), and deadline..."
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Raw Files (optional)</label>
+                    <div class="file-dropzone">
+                        <input type="file" name="project_file" id="projectFileInput">
+                        <small>Accepted: images, videos, zip, pdf (max 200MB)</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-btn full-width">
+                    Proceed to Payment (<span id="btnPriceLabel">₹{{ price }}</span>) <i class="fa-solid fa-lock"></i>
+                </button>
+            </form>
+        </div>
+
+        <aside class="order-summary-card">
+            <span class="section-tag">ORDER SUMMARY</span>
+            <h3 id="summaryService">{{ service }}</h3>
+            <p class="summary-pkg" id="summaryPackage">{{ package }} Package</p>
+
+            <div class="summary-divider"></div>
+
+            <ul class="summary-features" id="summaryFeatures"></ul>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total-row">
+                <span>Total Payable</span>
+                <strong id="summaryPrice">₹{{ price }}</strong>
             </div>
 
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" required>
+            <div class="trust-badges">
+                <span><i class="fa-solid fa-shield-halved"></i> Razorpay Secured</span>
+                <span><i class="fa-solid fa-credit-card"></i> UPI • Cards • NetBanking</span>
             </div>
-
-            <div class="form-group">
-                <label>Type of Edit</label>
-                <select name="project_type" required>
-                    <option value="">Select</option>
-                    <option>Video Editing</option>
-                    <option>Photo Retouching</option>
-                    <option>Reels / Shorts</option>
-                    <option>Thumbnail / Poster</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Project Description</label>
-                <textarea name="description" rows="5" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Upload Files (optional)</label>
-                <input type="file" name="project_file">
-                <small>Accepted: images, videos, zip, pdf (max 200MB)</small>
-            </div>
-            <button type="submit" class="cta-btn magnetic">
-                Submit Project Request
-            </button>
-        </form>
+        </aside>
     </div>
 </section>
+
+<script>
+const CATALOG = {
+    {% for slug, svc in services.items() %}
+    "{{ svc.title }}": {
+        {% for pkg_name, pkg in svc.packages.items() %}
+        "{{ pkg_name }}": {
+            price: {{ pkg.price }},
+            turnaround: "{{ pkg.turnaround }}",
+            features: {{ pkg.features|tojson }}
+        },
+        {% endfor %}
+    },
+    {% endfor %}
+};
+
+let currentService = "{{ service }}";
+let currentPackage = "{{ package }}";
+
+const serviceInput = document.getElementById("selectedServiceInput");
+const packageInput = document.getElementById("selectedPackageInput");
+const priceInput = document.getElementById("selectedPriceInput");
+const packageContainer = document.getElementById("packageSelector");
+const projectTypeSelect = document.getElementById("projectTypeSelect");
+
+function renderPackages() {
+    const pkgs = CATALOG[currentService] || CATALOG["Video Editing"];
+    if (!pkgs[currentPackage]) {
+        currentPackage = Object.keys(pkgs)[1] || Object.keys(pkgs)[0];
+    }
+
+    packageContainer.innerHTML = "";
+    Object.entries(pkgs).forEach(([name, info]) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "select-pill" + (name === currentPackage ? " active" : "");
+        btn.innerHTML = `<strong>${name}</strong><small>₹${info.price} • ${info.turnaround}</small>`;
+        btn.addEventListener("click", () => {
+            currentPackage = name;
+            renderPackages();
+        });
+        packageContainer.appendChild(btn);
+    });
+
+    const chosen = pkgs[currentPackage];
+    serviceInput.value = currentService;
+    packageInput.value = currentPackage;
+    priceInput.value = chosen.price;
+
+    document.getElementById("summaryService").textContent = currentService;
+    document.getElementById("summaryPackage").textContent = `${currentPackage} Package • ${chosen.turnaround}`;
+    document.getElementById("summaryPrice").textContent = `₹${chosen.price}`;
+    document.getElementById("btnPriceLabel").textContent = `₹${chosen.price}`;
+
+    const featList = document.getElementById("summaryFeatures");
+    featList.innerHTML = chosen.features
+        .map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`)
+        .join("");
+
+    if (projectTypeSelect) {
+        projectTypeSelect.value = currentService;
+    }
+}
+
+document.querySelectorAll("#serviceSelector .select-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll("#serviceSelector .select-pill").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentService = btn.dataset.service;
+        renderPackages();
+    });
+});
+
+renderPackages();
+</script>
 {% endblock %}

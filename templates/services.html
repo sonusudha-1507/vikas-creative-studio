@@ -1,40 +1,46 @@
 {% extends "base.html" %}
-{% block title %}Services — VIKAS{% endblock %}
+{% block title %}Services — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
 <section class="services-page">
-    <h2>Choose Your Service</h2>
+    <div class="section-header centered">
+        <span class="section-tag">OUR EXPERTISE</span>
+        <h2>Choose Your Creative Service</h2>
+        <p>Select a discipline to explore packages, turnaround times, and pricing.</p>
+    </div>
 
     <div class="services-grid">
-
         <div class="service-card">
+            <div class="service-icon"><i class="fa-solid fa-camera-retro"></i></div>
             <h3>Photo Editing</h3>
-            <p>Professional retouching & cinematic color grading.</p>
-            <span>Starting ₹499</span>
-            <a href="/services/photo-editing" class="cta-btn magnetic">View Packages</a>
+            <p>Editorial retouching, skin accuracy, lighting balance & cinematic color grading.</p>
+            <span class="starting-tag">Starting ₹499</span>
+            <a href="/services/photo-editing" class="cta-btn full-width">View Packages</a>
         </div>
 
-        <div class="service-card">
+        <div class="service-card featured">
+            <div class="service-icon"><i class="fa-solid fa-clapperboard"></i></div>
             <h3>Video Editing</h3>
-            <p>High-impact edits for YouTube & brands.</p>
-            <span>Starting ₹999</span>
-            <a href="/services/video-editing" class="cta-btn magnetic">View Packages</a>
+            <p>High-retention edits for YouTube, documentaries, commercials & brands.</p>
+            <span class="starting-tag">Starting ₹999</span>
+            <a href="/services/video-editing" class="cta-btn full-width">View Packages</a>
         </div>
 
         <div class="service-card">
+            <div class="service-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
             <h3>Instagram Reels</h3>
-            <p>Engaging short-form content edits.</p>
-            <span>Starting ₹799</span>
-            <a href="/services/reels-editing" class="cta-btn magnetic">View Packages</a>
+            <p>Hook-first vertical edits with kinetic captions, SFX & fast pacing.</p>
+            <span class="starting-tag">Starting ₹799</span>
+            <a href="/services/reels-editing" class="cta-btn full-width">View Packages</a>
         </div>
 
         <div class="service-card">
+            <div class="service-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
             <h3>Thumbnail Design</h3>
-            <p>High CTR YouTube thumbnails.</p>
-            <span>Starting ₹299</span>
-            <a href="/services/thumbnails" class="cta-btn">View Packages</a>
+            <p>High-CTR YouTube thumbnails crafted to maximize clicks & visibility.</p>
+            <span class="starting-tag">Starting ₹299</span>
+            <a href="/services/thumbnail-design" class="cta-btn full-width">View Packages</a>
         </div>
-
     </div>
 </section>
 {% endblock %}

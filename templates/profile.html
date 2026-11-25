@@ -1,69 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}My Profile — VIKAS{% endblock %}
 
 {% block content %}
-
 <section class="profile-page">
-
     <div class="profile-card">
-
+        <div class="profile-avatar">{{ user.name[:1]|upper }}</div>
         <h1>My Profile</h1>
 
         <div class="profile-item">
-
             <label>Name</label>
-
             <p>{{ user.name }}</p>
-
         </div>
 
         <div class="profile-item">
-
             <label>Email</label>
-
             <p>{{ user.email }}</p>
-
         </div>
 
         <div class="profile-item">
-
             <label>Member Since</label>
-
             <p>{{ user.created_at }}</p>
-
         </div>
 
         <div class="profile-actions">
-
-            <a
-                href="/dashboard"
-                class="primary-btn">
-
-                My Projects
-
-            </a>
-
-            <a
-                href="/services"
-                class="secondary-btn">
-
-                Start New Project
-
-            </a>
-
-            <a
-                href="/logout"
-                class="secondary-btn">
-
-                Logout
-
-            </a>
-
+            <a href="/dashboard" class="cta-btn">My Projects</a>
+            <a href="/start-project" class="secondary-btn">Start New Project</a>
+            <a href="/logout" class="secondary-btn">Logout</a>
         </div>
-
     </div>
-
 </section>
-
 {% endblock %}

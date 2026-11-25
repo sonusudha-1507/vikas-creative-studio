@@ -1,95 +1,34 @@
-// ======================
-// CUSTOM CURSOR
-// ======================
-
+// Custom Cursor (guarded for missing DOM or mobile)
 const dot = document.querySelector(".cursor-dot");
 const outline = document.querySelector(".cursor-outline");
 
+if (dot && outline && window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener("mousemove", e => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        outline.style.left = e.clientX + "px";
+        outline.style.top = e.clientY + "px";
+    });
+}
 
-window.addEventListener("mousemove", (e)=>{
+// Hero Intro
+if (typeof gsap !== "undefined") {
+    gsap.from(".hero-tag", { opacity: 0, y: 16, duration: 0.7 });
+    gsap.from(".hero-title", { opacity: 0, y: 28, duration: 0.85, delay: 0.15 });
+    gsap.from(".hero-subtitle", { opacity: 0, y: 20, duration: 0.75, delay: 0.3 });
+}
 
-    dot.style.left = e.clientX + "px";
-    dot.style.top = e.clientY + "px";
+// Portfolio Video Hover Preview
+document.querySelectorAll(".showcase-card").forEach(card => {
+    const video = card.querySelector("video");
+    if (!video) return;
 
+    card.addEventListener("mouseenter", () => {
+        video.play().catch(() => {});
+    });
 
-    outline.style.left =
-    e.clientX - 17 + "px";
-
-    outline.style.top =
-    e.clientY - 17 + "px";
-
-});
-// HERO INTRO
-
-
-gsap.from(".hero-tag",{
-
-opacity:0,
-y:20,
-duration:1
-
-});
-
-
-gsap.from(".hero-title",{
-
-opacity:0,
-y:60,
-duration:1.2,
-delay:.3
-
-});
-
-
-gsap.from(".hero-subtitle",{
-
-opacity:0,
-y:40,
-duration:1,
-delay:.6
-
-});
-
-
-gsap.from(".floating-element",{
-
-opacity:0,
-scale:.5,
-duration:1,
-delay:1,
-stagger:.2
-
-});
-// PREMIUM PORTFOLIO PLAY
-
-
-document
-.querySelectorAll(".showcase-card")
-.forEach(card=>{
-
-
-let video =
-card.querySelector("video");
-
-
-card.addEventListener(
-"mouseenter",
-()=>{
-
-video.play();
-
-});
-
-
-card.addEventListener(
-"mouseleave",
-()=>{
-
-video.pause();
-
-video.currentTime=0;
-
-});
-
-
+    card.addEventListener("mouseleave", () => {
+        video.pause();
+        video.currentTime = 0;
+    });
 });

@@ -1,105 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}
-{{ service.title }} — VIKAS
-{% endblock %}
-
+{% block title %}{{ service.title }} — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
-
-
 <section class="service-detail">
+    <div class="section-header centered">
+        <span class="section-tag">SERVICE PACKAGES</span>
+        <h1>{{ service.title }}</h1>
+        <p class="service-desc">{{ service.description }}</p>
+    </div>
 
-
-<h1>
-{{ service.title }}
-</h1>
-
-
-<p>
-{{ service.description }}
-</p>
-
-
-
-<div class="package-grid">
-
-
-<div class="package-card">
-
-<h2>Basic</h2>
-
-<h3>₹999</h3>
-
-<p>
-Clean professional edit.
-</p>
-
-
-<a class="cta-btn magnetic"
-
-href="/start-project?service={{service.title}}&package=Basic&price=999">
-
-Continue
-
-</a>
-
-
-</div>
-
-
-
-<div class="package-card featured">
-
-<h2>Standard</h2>
-
-<h3>₹2999</h3>
-
-<p>
-Advanced editing with effects.
-</p>
-
-
-<a class="cta-btn magnetic"
-
-href="/start-project?service={{service.title}}&package=Standard&price=2999">
-
-Continue
-
-</a>
-
-
-</div>
-
-
-
-<div class="package-card">
-
-<h2>Premium</h2>
-
-<h3>₹4999</h3>
-
-<p>
-Full cinematic production quality.
-</p>
-
-
-<a class="cta-btn magnetic"
-
-href="/start-project?service={{service.title}}&package=Premium&price=4999">
-
-Continue
-
-</a>
-
-
-</div>
-
-
-</div>
-
-
+    <div class="package-grid">
+        {% for pkg_name, pkg in service.packages.items() %}
+        <div class="package-card {% if pkg.featured %}featured{% endif %}">
+            {% if pkg.featured %}
+                <div class="popular-badge">RECOMMENDED</div>
+            {% endif %}
+            <h2>{{ pkg_name }}</h2>
+            <div class="package-price">₹{{ pkg.price }}</div>
+            <p class="turnaround-badge">
+                <i class="fa-regular fa-clock"></i> {{ pkg.turnaround }} Delivery
+            </p>
+            <ul>
+                {% for feat in pkg.features %}
+                    <li><i class="fa-solid fa-check"></i> {{ feat }}</li>
+                {% endfor %}
+            </ul>
+            <a
+                class="cta-btn full-width"
+                href="/start-project?service={{ service.title|urlencode }}&package={{ pkg_name|urlencode }}&price={{ pkg.price }}">
+                Continue with {{ pkg_name }}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
 </section>
-
-
 {% endblock %}

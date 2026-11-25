@@ -1,47 +1,35 @@
-// Global JS placeholder
-console.log("VIKAS frontend loaded");
-// Portfolio reveal
-gsap.from(".portfolio-card", {
-    scrollTrigger: {
-        trigger: ".portfolio-preview",
-        start: "top 80%",
-    },
-    y: 30,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: "power2.out"
-});
-gsap.registerPlugin(ScrollTrigger);
+// Mobile Navigation Toggle
+const navToggle = document.getElementById("navToggle");
+const navCollapse = document.getElementById("navCollapse");
 
-gsap.utils.toArray("section").forEach(section => {
-  gsap.from(section, {
-    opacity: 0,
-    y: 60,
-    duration: 1,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: section,
-      start: "top 80%"
-    }
-  });
-});
-document.querySelectorAll(".portfolio-card").forEach(card => {
-  const video = card.querySelector(".portfolio-video");
-
-  if (!video) return;
-
-  card.addEventListener("mouseenter", () => {
-    video.style.opacity = "1";
-    video.play().catch(error => {
-      console.error("Video playback failed:", error);
+if (navToggle && navCollapse) {
+    navToggle.addEventListener("click", () => {
+        navCollapse.classList.toggle("open");
     });
-  });
+}
 
-  card.addEventListener("mouseleave", () => {
-    video.pause();
-    video.currentTime = 0;
-    video.style.opacity = "0";
-  });
-});
+// Auto-dismiss flash toasts after 5 seconds
+setTimeout(() => {
+    document.querySelectorAll(".flash-toast").forEach(toast => {
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.4s ease";
+        setTimeout(() => toast.remove(), 400);
+    });
+}, 5000);
 
+// Optional subtle GSAP entrance without hiding elements if ScrollTrigger fails
+if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray(".service-card, .package-card, .trust-card").forEach(card => {
+        gsap.from(card, {
+            y: 24,
+            duration: 0.6,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: card,
+                start: "top 90%",
+                once: true,
+            },
+        });
+    });
+}

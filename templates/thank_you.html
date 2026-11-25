@@ -1,156 +1,80 @@
 {% extends "base.html" %}
 
-{% block title %}Thank You{% endblock %}
+{% block title %}Order Confirmed — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
-<div class="thankyou-page">
+<section class="thankyou-page">
+    <div class="thankyou-card">
+        <div class="success-circle">✓</div>
 
-<div class="thankyou-card">
+        <h1>Thank You, {{ project.name }}!</h1>
+        <p class="thankyou-subtitle">
+            Your payment has been verified and an order confirmation has been sent to <strong>{{ project.email }}</strong>.
+        </p>
 
-<section class="thank-you-page">
-
-    <div class="thank-you-card">
-
-        <div class="success-icon">
-            <i class="fa-solid fa-circle-check"></i>
+        <div class="project-summary">
+            <div class="summary-row">
+                <span>Project ID</span>
+                <strong>#{{ project.id }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Client</span>
+                <strong>{{ project.name }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Service</span>
+                <strong>{{ project.service_name }} ({{ project.package_name }})</strong>
+            </div>
+            <div class="summary-row">
+                <span>Amount Paid</span>
+                <strong>₹{{ project.price }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Payment Status</span>
+                <strong class="paid">{{ project.payment_status }}</strong>
+            </div>
         </div>
-
-        <div class="success-badge">
-
-<div class="success-circle">
-
-✓
-
-</div>
-
-</div>
-
-<h1>Thank You!</h1>
-
-<p class="thankyou-subtitle">
-
-Your payment has been received successfully.
-
-</p>
-
-        <div class="project-details">
-
-            <div class="project-summary">
-
-<div class="summary-row">
-
-<span>Project ID</span>
-
-<strong>#{{ project.id }}</strong>
-
-</div>
-
-<div class="summary-row">
-
-<span>Client</span>
-
-<strong>{{ project.client_name }}</strong>
-
-</div>
-
-<div class="summary-row">
-
-<span>Service</span>
-
-<strong>{{ project.service_name }}</strong>
-
-</div>
-
-<div class="summary-row">
-
-<span>Payment</span>
-
-<strong class="paid">
-
-{{ project.payment_status }}
-
-</strong>
-
-</div>
-
-</div>
 
         <div class="timeline">
-
-<div class="timeline-item">
-
-<div class="timeline-dot"></div>
-
-<div class="timeline-content">
-
-<h4>Project Confirmed</h4>
-
-<p>Your order has been received successfully.</p>
-
-</div>
-
-</div>
-
-<div class="timeline-item">
-
-<div class="timeline-dot"></div>
-
-<div class="timeline-content">
-
-<h4>Review</h4>
-
-<p>Our team will review your uploaded files.</p>
-
-</div>
-
-</div>
-
-<div class="timeline-item">
-
-<div class="timeline-dot"></div>
-
-<div class="timeline-content">
-
-<h4>Editing Begins</h4>
-
-<p>Our editors will start working on your project.</p>
-
-</div>
-
-</div>
-
-<div class="timeline-item">
-
-<div class="timeline-dot"></div>
-
-<div class="timeline-content">
-
-<h4>Delivery</h4>
-
-<p>You'll receive the completed files through your dashboard.</p>
-
-</div>
-
-</div>
-
-</div>
-        <div class="button-group">
-
-            <a href="/" class="primary-btn">
-                Back to Home
-            </a>
-
-            <a href="/admin" class="secondary-btn">
-                Admin Dashboard
-            </a>
-
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>Project Confirmed</h4>
+                    <p>Your order and payment have been received by the studio.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>File Review</h4>
+                    <p>Our team inspects your uploaded footage, photos, and brief.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>Editing & Grading</h4>
+                    <p>Precision editing, color grading, and motion polish begin.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>Final Delivery</h4>
+                    <p>Download your finished files directly from your client dashboard.</p>
+                </div>
+            </div>
         </div>
 
+        <div class="thankyou-actions">
+            {% if session.get("user_id") %}
+                <a href="/dashboard" class="cta-btn">Go to Dashboard</a>
+                <a href="/chat/{{ project.id }}" class="secondary-btn">Open Studio Chat</a>
+            {% else %}
+                <a href="/track-project" class="cta-btn">Track Order Status</a>
+                <a href="/" class="secondary-btn">Back to Home</a>
+            {% endif %}
+        </div>
     </div>
-
 </section>
-</div>
-
-</div>
-
 {% endblock %}

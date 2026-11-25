@@ -1,168 +1,126 @@
 {% extends "base.html" %}
 
-{% block title %}Complete Payment{% endblock %}
+{% block title %}Complete Payment — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
-<div class="payment-page">
-
-<div class="payment-card">
-
-<div class="payment-header">
-
-<div class="success-icon">
-
-✓
-
-</div>
-
-<h1>Complete Your Payment</h1>
-
-<p>
-
-Your project has been created successfully.
-
-</p>
-
-</div>
-
 <section class="payment-page">
-
-    <div class="payment-container">
-
-        <div class="payment-left">
-
+    <div class="payment-card">
+        <div class="payment-header">
+            <div class="success-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
             <h1>Complete Your Payment</h1>
+            <p>Your project #{{ project.id }} is saved. Complete checkout to start editing.</p>
+        </div>
 
-            <p>
-                Your project has been created successfully.
-            </p>
-
+        <div class="payment-container">
             <div class="summary-card">
-
                 <div class="summary-row">
                     <span>Project ID</span>
                     <strong>#{{ project.id }}</strong>
                 </div>
-
                 <div class="summary-row">
                     <span>Client</span>
                     <strong>{{ project.name }}</strong>
                 </div>
-
+                <div class="summary-row">
+                    <span>Email</span>
+                    <strong>{{ project.email }}</strong>
+                </div>
                 <div class="summary-row">
                     <span>Service</span>
                     <strong>{{ project.service_name }}</strong>
                 </div>
-
                 <div class="summary-row">
                     <span>Package</span>
                     <strong>{{ project.package_name }}</strong>
                 </div>
-
                 <div class="summary-row total">
-                    <span>Total</span>
+                    <span>Total Amount</span>
                     <strong>₹{{ project.price }}</strong>
                 </div>
-
             </div>
 
+            <div class="payment-actions-box">
+                {% if gateway_error or not order %}
+                    <div class="alert-box">
+                        Razorpay API keys are not configured yet. Add <code>RAZORPAY_KEY_ID</code> and <code>RAZORPAY_KEY_SECRET</code> in your environment variables to accept live payments.
+                    </div>
+                {% else %}
+                    <button id="pay-btn" class="cta-btn full-width">
+                        Pay ₹{{ project.price }} Securely <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <p class="payment-note">
+                        <i class="fa-solid fa-shield-halved"></i> Powered by Razorpay • Supports UPI, Cards, Wallets & NetBanking
+                    </p>
+                {% endif %}
+            </div>
         </div>
-
-        <div class="payment-right">
-
-            <button
-                id="pay-btn"
-                class="primary-btn">
-
-                Pay ₹{{ project.price }}
-
-            </button>
-
-        </div>
-
     </div>
-
 </section>
 
+{% if not gateway_error and order %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
 <script>
+const payBtn = document.getElementById("pay-btn");
 
 const options = {
-
     key: "{{ key }}",
-
     amount: "{{ order.amount }}",
-
     currency: "INR",
-
     name: "VIKAS Creative Studio",
-
-    description: "{{ project.service_name }}",
-
+    description: "{{ project.service_name }} - {{ project.package_name }}",
     order_id: "{{ order.id }}",
-
+    prefill: {
+        name: "{{ project.name }}",
+        email: "{{ project.email }}"
+    },
     handler: function (response) {
+        payBtn.disabled = true;
+        payBtn.innerText = "Verifying Payment...";
 
         fetch("/payment-success/{{ project.id }}", {
-
             method: "POST",
-
             headers: {
-
                 "Content-Type": "application/json"
-
             },
-
             body: JSON.stringify({
-
-                payment_id: response.razorpay_payment_id
-
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
             })
-
         })
-
         .then(res => res.json())
-
         .then(data => {
-
-            if(data.success){
-
+            if (data.success) {
                 window.location = data.redirect;
-
+            } else {
+                payBtn.disabled = false;
+                payBtn.innerText = "Pay ₹{{ project.price }} Securely";
+                alert(data.error || "Payment verification failed. Please contact support.");
             }
-            else{
-
-                alert("Payment verification failed.");
-
-            }
-
+        })
+        .catch(() => {
+            payBtn.disabled = false;
+            payBtn.innerText = "Pay ₹{{ project.price }} Securely";
+            alert("Network error while verifying payment.");
         });
-
     },
-
     theme: {
-
-        color: "#000000"
-
+        color: "#7c5cff"
     }
-
 };
 
 const razorpay = new Razorpay(options);
 
-document
-    .getElementById("pay-btn")
-    .onclick = function(e){
+razorpay.on("payment.failed", function (response) {
+    alert("Payment failed: " + (response.error && response.error.description ? response.error.description : "Please try again."));
+});
 
-        razorpay.open();
-
-        e.preventDefault();
-
-    };
-
+payBtn.onclick = function (e) {
+    e.preventDefault();
+    razorpay.open();
+};
 </script>
-</div>
-
-</div>
+{% endif %}
 {% endblock %}

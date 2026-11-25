@@ -1,62 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}
-Create Account — VIKAS
-{% endblock %}
-
+{% block title %}Create Account — VIKAS Creative Studio{% endblock %}
 
 {% block content %}
-
 <section class="auth-page">
+    <div class="auth-box">
+        <span class="section-tag">GET STARTED</span>
+        <h1>Create Account</h1>
+        <p>Track project progress in real time, chat directly, and access final downloads.</p>
 
-<div class="auth-box">
+        <form method="POST">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Your full name" required>
+            </div>
 
-<h1>Create Account</h1>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
 
-<p>
-Start your creative project journey.
-</p>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="At least 6 characters" minlength="6" required>
+            </div>
 
+            <button type="submit" class="cta-btn full-width">Create Account</button>
+        </form>
 
-<form method="POST">
-
-<input 
-type="text"
-name="name"
-placeholder="Full Name"
-required>
-
-
-<input
-type="email"
-name="email"
-placeholder="Email"
-required>
-
-
-<input
-type="password"
-name="password"
-placeholder="Password"
-required>
-
-
-<button class="cta-btn magnetic">
-Create Account
-</button>
-
-
-</form>
-
-
-<a href="/login">
-Already have an account?
-Login
-</a>
-
-
-</div>
-
+        <p class="auth-footer">
+            Already have an account? <a href="/login">Login here</a>
+        </p>
+    </div>
 </section>
-
 {% endblock %}

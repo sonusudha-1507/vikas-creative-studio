@@ -2,232 +2,122 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VIKAS Creative Studio{% endblock %}</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cinematic.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        {% block title %}
-
-        VIKAS Creative Studio
-
-        {% endblock %}
-
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/base.css') }}">
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/cinematic.css') }}">
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    {% block head %}
-
-    {% endblock %}
-
+    {% block head %}{% endblock %}
 </head>
 
 <body>
 
 <div class="cinematic-bg">
-
+    <div class="grid-overlay"></div>
     <div class="gradient-orb orb-one"></div>
-
     <div class="gradient-orb orb-two"></div>
-
 </div>
 
 <div class="cursor-dot"></div>
-
 <div class="cursor-outline"></div>
 
 <header class="site-header">
-
     <nav class="nav">
-
-        <a
-            href="/"
-            class="logo">
-
-            VIKAS
-
+        <a href="/" class="logo">
+            <span class="logo-mark">V</span>
+            <span>VIKAS</span>
         </a>
 
-        <ul class="nav-links">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
 
-            <li>
-
-                <a href="/">
-
-                    Home
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="/services">
-
-                    Services
-
-                </a>
-
-            </li>
-            <li>
+        <div class="nav-collapse" id="navCollapse">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/services">Services</a></li>
+                <li>
+                    {% if session.get("user_id") %}
+                        <a href="/dashboard">Track Project</a>
+                    {% else %}
+                        <a href="/track-project">Track Project</a>
+                    {% endif %}
+                </li>
                 {% if session.get("user_id") %}
-                <a href="/dashboard">
-                    Track Project
-                </a>
-                {% else %}
-                <a href="/login">
-                    Track Project
-                </a>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/profile">Profile</a></li>
                 {% endif %}
-            </li>
+            </ul>
 
-            {% if session.get("user_id") %}
-
-            <li>
-
-                <a href="/dashboard">
-
-                    Dashboard
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="/profile">
-
-                    Profile
-
-                </a>
-
-            </li>
-
-            {% endif %}
-
-        </ul>
-
-        <div class="nav-right">
-
-            {% if session.get("user_id") %}
-
-                <a
-                    href="/start-project"
-                    class="cta-btn">
-
-                    New Project
-
-                </a>
-
-                <a
-                    href="/logout"
-                    class="nav-link-btn">
-
-                    Logout
-
-                </a>
-
-            {% else %}
-
-                <a
-                    href="/login"
-                    class="nav-link-btn">
-
-                    Login
-
-                </a>
-
-                <a
-                    href="/signup"
-                    class="cta-btn">
-
-                    Register
-
-                </a>
-
-            {% endif %}
-
+            <div class="nav-right">
+                {% if session.get("user_id") %}
+                    <a href="/start-project" class="cta-btn">Start Project</a>
+                    <a href="/logout" class="nav-link-btn">Logout</a>
+                {% else %}
+                    <a href="/login" class="nav-link-btn">Login</a>
+                    <a href="/start-project" class="cta-btn">Start Project</a>
+                {% endif %}
+            </div>
         </div>
-
     </nav>
-
 </header>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-toast flash-{{ category }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <main>
-
-    {% block content %}
-
-    {% endblock %}
-
+    {% block content %}{% endblock %}
 </main>
 
 <footer class="site-footer">
-
-    <div class="footer-content">
-
-        <p>
-
-            © {{ year if year else 2026 }}
-            VIKAS Creative Studio.
-            All Rights Reserved.
-
-        </p>
-
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <strong>VIKAS Creative Studio</strong>
+            <p>Cinematic editing, visual polish & high-CTR storytelling.</p>
+        </div>
+        <div class="footer-links">
+            <a href="/services">Services</a>
+            <a href="/start-project">Start Project</a>
+            <a href="/track-project">Track Order</a>
+            <a href="mailto:{{ OWNER_EMAIL }}">Contact Studio</a>
+        </div>
+        <p class="footer-copy">© {{ year if year else 2026 }} VIKAS Creative Studio. All Rights Reserved.</p>
     </div>
-
 </footer>
 
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-
 <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-
 <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
-
 <script>
-
-const lenis = new Lenis({
-
-    duration:1.2,
-
-    smoothWheel:true
-
-});
-
-function raf(time){
-
-    lenis.raf(time);
-
+if (typeof Lenis !== "undefined") {
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
     requestAnimationFrame(raf);
-
 }
-
-requestAnimationFrame(raf);
-
 </script>
-
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 <script src="{{ url_for('static', filename='js/cinematic.js') }}"></script>
-
-{% block scripts %}
-
-{% endblock %}
+{% block scripts %}{% endblock %}
 
 </body>
-
 </html>

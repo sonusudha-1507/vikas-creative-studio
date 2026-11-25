@@ -1,128 +1,55 @@
 {% extends "base.html" %}
 
-{% block title %}Client Dashboard{% endblock %}
+{% block title %}Client Dashboard — VIKAS{% endblock %}
 
 {% block content %}
-
 <section class="dashboard-page">
-
     <div class="container">
-
         <div class="dashboard-header">
-
             <div>
-
-                <h1>Welcome {{ session["user_name"] }}</h1>
-
-                <p>Track your projects in real time.</p>
-
+                <span class="section-tag">WORKSPACE</span>
+                <h1>Welcome, {{ session["user_name"] }}</h1>
+                <p>Track your projects, message the studio, and download final renders.</p>
             </div>
 
             <div class="dashboard-actions">
-
                 <div class="notification-wrapper">
-
-                    <button
-                        id="notificationBtn"
-                        class="notification-btn">
-
-                        🔔
-
+                    <button id="notificationBtn" class="notification-btn" type="button" aria-label="Notifications">
+                        <i class="fa-regular fa-bell"></i>
                         {% if unread > 0 %}
-
-                        <span
-                            id="notificationCount"
-                            class="notification-count">
-
-                            {{ unread }}
-
-                        </span>
-
+                            <span id="notificationCount" class="notification-count">{{ unread }}</span>
                         {% endif %}
-
                     </button>
 
-                    <div
-                        id="notificationMenu"
-                        class="notification-menu">
-
+                    <div id="notificationMenu" class="notification-menu">
                         <div class="notification-header">
-
                             <h3>Notifications</h3>
-
-                            <a
-                                href="/notifications/read">
-
-                                Mark all read
-
-                            </a>
-
+                            <a href="/notifications/read">Mark all read</a>
                         </div>
 
                         {% if notifications %}
-
                             {% for n in notifications %}
-
                             <div class="notification-item">
-
-                                <strong>
-
-                                    {{ n.title }}
-
-                                </strong>
-
-                                <p>
-
-                                    {{ n.description }}
-
-                                </p>
-
-                                <small>
-
-                                    {{ n.created_at }}
-
-                                </small>
-
+                                <strong>{{ n.title }}</strong>
+                                <p>{{ n.description }}</p>
+                                <small>{{ n.created_at }}</small>
                             </div>
-
                             {% endfor %}
-
                         {% else %}
-
-                            <div class="notification-item">
-
-                                No notifications yet.
-
-                            </div>
-
+                            <div class="notification-item">No notifications yet.</div>
                         {% endif %}
-
                     </div>
-
                 </div>
 
-                <a
-                    href="/services"
-                    class="primary-btn">
-
-                    + New Project
-
-                </a>
-
+                <a href="/start-project" class="cta-btn">+ New Project</a>
             </div>
-
         </div>
 
         {% if projects %}
-
         <div class="dashboard-table">
-
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>ID</th>
                         <th>Service</th>
                         <th>Package</th>
@@ -131,215 +58,89 @@
                         <th>Progress</th>
                         <th>Chat</th>
                         <th>Download</th>
-
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                 {% for project in projects %}
-
                 <tr>
-
+                    <td>#{{ project.id }}</td>
+                    <td><strong>{{ project.service_name }}</strong></td>
+                    <td>{{ project.package_name }}</td>
+                    <td>₹{{ project.price }}</td>
                     <td>
-
-                        #{{ project.id }}
-
-                    </td>
-
-                    <td>
-
-                        {{ project.service_name }}
-
-                    </td>
-
-                    <td>
-
-                        {{ project.package_name }}
-
-                    </td>
-
-                    <td>
-
-                        ₹{{ project.price }}
-
-                    </td>
-
-                    <td>
-
-                        {% if project.payment_status=="Paid" %}
-
-                            <span class="status status-completed">
-
-                                Paid
-
-                            </span>
-
+                        {% if project.payment_status == "Paid" %}
+                            <span class="status status-completed">Paid</span>
                         {% else %}
-
-                            <span class="status status-pending">
-
-                                Pending
-
-                            </span>
-
+                            <a href="/pay/{{ project.id }}" class="status status-pending">Pay Now</a>
                         {% endif %}
-
                     </td>
-
                     <td>
-
                         <div class="progress-wrapper">
-
                             {% set progress = {
-                                "Submitted":20,
-                                "Reviewing":40,
-                                "Editing":70,
-                                "Rendering":90,
-                                "Delivered":100
-                            }.get(project.status,0) %}
-
+                                "Submitted": 20,
+                                "Reviewing": 40,
+                                "Editing": 70,
+                                "Rendering": 90,
+                                "Delivered": 100
+                            }.get(project.status, 10) %}
                             <div class="progress-bar">
-
-                                <div
-                                    class="progress-fill"
-                                    style="width: {{ progress }}%;">
-
-                                </div>
-
+                                <div class="progress-fill" style="width: {{ progress }}%;"></div>
                             </div>
-
-                            <small>
-
-                                {{ progress }}% • {{ project.status }}
-
-                            </small>
-
+                            <small>{{ progress }}% • {{ project.status }}</small>
                         </div>
-
                     </td>
-
                     <td>
-
-                        <a
-                            href="/chat/{{ project.id }}"
-                            class="secondary-btn">
-
-                            Chat
-
-                        </a>
-
+                        <a href="/chat/{{ project.id }}" class="secondary-btn">Chat</a>
                     </td>
-
                     <td>
-
                         {% if project.delivery_file %}
-
-                            <a
-                                href="/download/{{ project.delivery_file }}"
-                                class="primary-btn">
-
-                                Download
-
-                            </a>
-
+                            <a href="/download/{{ project.delivery_file }}" class="primary-btn">Download</a>
                         {% else %}
-
-                            —
-
+                            <span class="text-muted">—</span>
                         {% endif %}
-
                     </td>
-
                 </tr>
-
                 {% endfor %}
-
                 </tbody>
-
             </table>
-
         </div>
-
         {% else %}
-
         <div class="empty-state">
-
             <h2>No Projects Yet</h2>
-
-            <p>
-
-                Create your first project to get started.
-
-            </p>
-
-            <a
-                href="/services"
-                class="primary-btn">
-
-                Start Project
-
-            </a>
-
+            <p>Start your first creative project to see live progress here.</p>
+            <a href="/start-project" class="cta-btn">Start Project</a>
         </div>
-
         {% endif %}
-
     </div>
-
 </section>
 
 <script>
+const btn = document.getElementById("notificationBtn");
+const menu = document.getElementById("notificationMenu");
 
-const btn=document.getElementById("notificationBtn");
-
-const menu=document.getElementById("notificationMenu");
-
-if(btn){
-
-    btn.onclick=function(e){
-
+if (btn && menu) {
+    btn.onclick = function (e) {
         e.stopPropagation();
-
         menu.classList.toggle("show");
-
     };
-
 }
 
-document.onclick=function(){
+document.addEventListener("click", function () {
+    if (menu) menu.classList.remove("show");
+});
 
-    if(menu){
-
-        menu.classList.remove("show");
-
-    }
-
-};
-
-setInterval(function(){
-
+setInterval(function () {
     fetch("/notifications")
-
-    .then(r=>r.json())
-
-    .then(data=>{
-
-        const badge=document.getElementById("notificationCount");
-
-        const unread=data.filter(n=>n.is_read===0).length;
-
-        if(badge){
-
-            badge.innerText=unread;
-
-        }
-
-    });
-
-},5000);
-
+        .then(r => r.json())
+        .then(data => {
+            const badge = document.getElementById("notificationCount");
+            const unread = data.filter(n => n.is_read === 0).length;
+            if (badge) {
+                badge.innerText = unread;
+                badge.style.display = unread > 0 ? "flex" : "none";
+            }
+        })
+        .catch(() => {});
+}, 5000);
 </script>
-
 {% endblock %}
